@@ -1,0 +1,8 @@
+{
+  "name": "trabalho-final-tr1",
+  "version": "1.0",
+  "scripts": {
+    "start": "./start.sh",
+    "dev": "./dev.sh"
+  }
+}
