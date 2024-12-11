@@ -7,11 +7,11 @@ from math import floor
 class SignalGenerator:
     def __init__(self, bit_stream, V):
         self.bit_stream = bit_stream
-        self.v0 = -V
-        self.v1 = V
-        self.size = len(bit_stream)
+        self.Vmin = -V
+        self.Vmax = V
+        self.size = 0
         self.pointsNumber = 100
-        self.time = np.arange(0, self.size, 1/self.pointsNumber)
+        self.time = 0
 
     def setBitStream(self, bit_stream):
         self.bit_stream = bit_stream
@@ -34,9 +34,9 @@ class SignalGenerator:
 
         for i in range(self.size):
             if self.bit_stream[i] == 1:
-                content = self.v1
+                content = self.Vmax
             else:
-              content = self.v0
+              content = self.Vmin
             for j in range(self.pointsNumber):
                 signal[aux] = content
                 aux += 1
@@ -44,31 +44,46 @@ class SignalGenerator:
         return self.time, signal
 
     def Clock(self):
+
         signal = np.zeros(self.size * 100).astype(int)
-        content = self.v1
+
+        content = self.Vmax
         for i in range(self.size * 100):
             if i % 50 == 0:
-                content = self.v1 if content == self.v0 else self.v0
+                content = self.Vmax if content == self.Vmin else self.Vmin
             signal[i] = content
         return signal
 
     def Manchester(self):
+
         n, y = self.NRZ()
         clock = self.Clock()
+
         signal = np.zeros(self.size * 100).astype(int)
         for i in range(len(y)):
-            signal[i] = y[i] ^ clock[i]
+            signal[i] = self.Vmin if (y[i] ^ clock[i]) == 0 else self.Vmax
         return n, signal
 
     def Bipolar(self):
+
         signal = np.zeros(self.size * 100).astype(int)
-        content = self.v0
+        content = self.Vmin
+        multiplicador = 1
         aux = 0
 
         for i in range(self.size):
-            content = self.v1 if self.bit_stream[i] == 1 and content == self.v0 else self.v0
+            
+            if ((self.bit_stream[i] == 1) and (content == self.Vmin)):
+                multiplicador = self.Vmax
+                content = self.Vmax
+            elif ((self.bit_stream[i] == 1) and (content == self.Vmax)):
+                multiplicador = self.Vmin
+                content = self.Vmin
+            else:
+                multiplicador = 0
+
             for j in range(100):
-                signal[aux] = content
+                signal[aux] = multiplicador
                 aux += 1
 
         return self.time, signal
