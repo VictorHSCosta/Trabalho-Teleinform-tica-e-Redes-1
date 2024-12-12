@@ -4,14 +4,16 @@ from math import floor
 import numpy as np
 from math import floor
 
-class SignalGenerator:
-    def __init__(self, bit_stream, V):
-        self.bit_stream = bit_stream
-        self.Vmin = -V
-        self.Vmax = V
+class SignalGeneratorDigital:
+    def __init__(self):
+        self.bit_stream = []
+        self.Vmin = -1
+        self.Vmax = 1
         self.size = 0
         self.pointsNumber = 100
         self.time = 0
+
+    #setup methods
 
     def setBitStream(self, bit_stream):
         self.bit_stream = bit_stream
@@ -19,12 +21,13 @@ class SignalGenerator:
         self.time = np.arange(0, self.size, 1/self.pointsNumber)
 
     def setV(self, V):
-        self.Vmin = V
-        self.Vmax = -V
+        self.Vmin = -V
+        self.Vmax = V
 
     def setPointsNumber(self, pointsNumber):
         self.pointsNumber = pointsNumber
         self.time = np.arange(0, self.size, 1/self.pointsNumber)
+
 
     def NRZ(self):
         

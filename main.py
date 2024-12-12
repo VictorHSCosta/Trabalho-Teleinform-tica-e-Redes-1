@@ -1,14 +1,16 @@
-from Grafica.GeradorDeOndas import GeradorDeOndas
+from Funcao_Grafica.GeradorDeOndas import GeradorDeOndas
 
 def main():
 
     ondas = GeradorDeOndas(1)
 
-    ondas.BitStream([0,1,0,1,0,0,1,1])
+    ondas.BitStream([1,0,1,1,0])
 
-    ondas.GerarOnda()
+    ondas.GerarOndaDigitais()
 
-    #plotar_sinal(y, "Sinal ASK", "Tempo", "Amplitude",x,"analogico")
+    ondas.SetFrequency(1)
+
+    ondas.GerarOndaAnalogicas()   
 
 if __name__ == '__main__':
     main()
