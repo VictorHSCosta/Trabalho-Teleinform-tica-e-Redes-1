@@ -1,10 +1,17 @@
 import numpy as np
 
-def afk(A, f , bit_stream):
+def ask(A, f , bit_stream):
   size = len(bit_stream)
-  signal = np.zeros(size)
-  n = [signal in range(size)]
+  signal = np.zeros(size*100)
+  t = np.arange(0, size*100 ,1/100)
+  
+  for i in range(size):
+    for j in range(100):
+      signal[j*i] = 1
+        
+     
+    
 
-  print(n)
+  return t , signal
     
 

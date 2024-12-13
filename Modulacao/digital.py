@@ -1,52 +1,91 @@
 import numpy as np
 from math import floor
 
-def NRZ(bit_stream):
-  size = len(bit_stream)
-  signal = np.zeros(size*100).astype(int)
-  n = np.arange(0 , size, 0.01) # Esse é o tempo suficiente para representar o clock que é de 2Bauds
-  for i in range(size*100):
-    if bit_stream[floor(i/100)] == 1:
-      signal[i] = 1
-    else:
-      signal[i] = -1
-  return n, signal
+import numpy as np
+from math import floor
 
-def Clock(size, v0 = -1, v1 = 1):
-  signal = np.zeros(size*100).astype(int)
-  content = v1
+class SignalGenerator:
+    def __init__(self, bit_stream, V):
+        self.bit_stream = bit_stream
+        self.Vmin = -V
+        self.Vmax = V
+        self.size = 0
+        self.pointsNumber = 100
+        self.time = 0
 
-  for i in range(size*100):
-    if i%50 == 0:
-      content = v1 if content == v0 else v0
-    signal[i] = content
-  return signal
+    def setBitStream(self, bit_stream):
+        self.bit_stream = bit_stream
+        self.size = len(bit_stream)
+        self.time = np.arange(0, self.size, 1/self.pointsNumber)
 
-def Manchester(bit_stream):
+    def setV(self, V):
+        self.Vmin = V
+        self.Vmax = -V
 
-  size = len(bit_stream)
+    def setPointsNumber(self, pointsNumber):
+        self.pointsNumber = pointsNumber
+        self.time = np.arange(0, self.size, 1/self.pointsNumber)
 
-  x , y = NRZ(bit_stream)
-  clock = Clock(size)
-  signal = np.zeros(size*100).astype(int)
+    def NRZ(self):
+        
+        content = 0
+        aux = 0
+        signal = np.zeros(self.size * self.pointsNumber).astype(int)
 
-  for i in range(len(y)):
-    signal[i] =  y[i] ^ clock[i]
+        for i in range(self.size):
+            if self.bit_stream[i] == 1:
+                content = self.Vmax
+            else:
+              content = self.Vmin
+            for j in range(self.pointsNumber):
+                signal[aux] = content
+                aux += 1
 
-  return x, signal
-    
-def Bipolar(bit_stream, v0 = -1, v1 = 1):
-  size = len(bit_stream)
-  signal = np.zeros(size*100).astype(int)
-  content = v1
-  n = np.arange(0 , size, 0.01) # Esse é o tempo suficiente para representar o clock que é de 2Bauds
-  for i in range(size*100):
-    if i%50 == 0:
-      content = v1 if content == v0 else v0
-    if bit_stream[floor(i/100)] == 1:
-      signal[i] = content
-    else:
-      signal[i] = 0
-  return n, signal
+        return self.time, signal
+
+    def Clock(self):
+
+        signal = np.zeros(self.size * 100).astype(int)
+
+        content = self.Vmax
+        for i in range(self.size * 100):
+            if i % 50 == 0:
+                content = self.Vmax if content == self.Vmin else self.Vmin
+            signal[i] = content
+        return signal
+
+    def Manchester(self):
+
+        n, y = self.NRZ()
+        clock = self.Clock()
+
+        signal = np.zeros(self.size * 100).astype(int)
+        for i in range(len(y)):
+            signal[i] = self.Vmin if (y[i] ^ clock[i]) == 0 else self.Vmax
+        return n, signal
+
+    def Bipolar(self):
+
+        signal = np.zeros(self.size * 100).astype(int)
+        content = self.Vmin
+        multiplicador = 1
+        aux = 0
+
+        for i in range(self.size):
+            
+            if ((self.bit_stream[i] == 1) and (content == self.Vmin)):
+                multiplicador = self.Vmax
+                content = self.Vmax
+            elif ((self.bit_stream[i] == 1) and (content == self.Vmax)):
+                multiplicador = self.Vmin
+                content = self.Vmin
+            else:
+                multiplicador = 0
+
+            for j in range(100):
+                signal[aux] = multiplicador
+                aux += 1
+
+        return self.time, signal
 
 

@@ -1,23 +1,14 @@
-from Modulacao.digital import * 
-from Grafica.Digital import *
+from Grafica.GeradorDeOndas import GeradorDeOndas
 
 def main():
-    
-    x , y = NRZ([0,1,0,1,0,0,1,1])
 
-    plotar_sinal(y, "Sinal NRZ", "Tempo", "Amplitude" ,x)
+    ondas = GeradorDeOndas(1)
 
-    x = Clock(8)
+    ondas.BitStream([0,1,0,1,0,0,1,1])
 
-    plotar_sinal( x, "Clock", "Tempo", "Amplitude")
+    ondas.GerarOnda()
 
-    x , y = Manchester([0,1,0,1,0,0,1,1])
-
-    plotar_sinal(y, "Sinal Manchester", "Tempo", "Amplitude",x)
-
-    x,y = Bipolar([0,1,0,1,0,0,1,1])
-
-    plotar_sinal(y, "Sinal Bipolar", "Tempo", "Amplitude",x)
+    #plotar_sinal(y, "Sinal ASK", "Tempo", "Amplitude",x,"analogico")
 
 if __name__ == '__main__':
     main()
