@@ -1,4 +1,3 @@
-```markdown
 # Trabalho de Teleinformática e Redes 1
 
 Este projeto foi desenvolvido como parte do trabalho da disciplina **Teleinformática e Redes 1**. Ele consiste em uma aplicação de transmissor que utiliza Node.js e Python para execução. Siga as instruções abaixo para configurar e executar o projeto no Linux.
