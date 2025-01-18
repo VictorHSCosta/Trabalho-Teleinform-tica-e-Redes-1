@@ -1,14 +1,6 @@
-import matplotlib
-
-from app.backend.untils.analogico import GeradorSinalAnalogico
-from app.backend.untils.digital import GeradorSinalDigital
-matplotlib.use('Agg')  # Define o backend como 'Agg' (não interativo)
 import matplotlib.pyplot as plt
-from threading import Lock
-import os
-import gc
-
-plot_lock = Lock()  # Cria um Lock para sincronização
+from .digital import GeradorSinalDigital
+from .analogico import GeradorSinalAnalogico
 
 class GeradorDeOndas:
 
@@ -60,25 +52,19 @@ class GeradorDeOndas:
         nome_arquivo = titulo
 
         if self.digital:
-            caminho_dir = "app/static/images/digital"
-            caminho = f"{caminho_dir}/{nome_arquivo}.png" 
+            caminho = f"app/static/images/digital/{nome_arquivo}.png" 
         else:
-            caminho_dir = "app/static/images/analogico"
-            caminho = f"{caminho_dir}/{nome_arquivo}.png"
+            caminho = f"app/static/images/analogico/{nome_arquivo}.png"
 
-        # Cria o diretório se ele não existir
-        os.makedirs(caminho_dir, exist_ok=True)
+        plt.plot(tempo, sinal)
+        plt.title(titulo)
+        plt.xlabel(eixo_x)
+        plt.ylabel(eixo_y)
 
-        with plot_lock:  # Usa o Lock para garantir que apenas uma thread plote por vez
-            plt.plot(tempo, sinal)
-            plt.title(titulo)
-            plt.xlabel(eixo_x)
-            plt.ylabel(eixo_y)
 
-            print(caminho)
-            plt.savefig(caminho, format='png')
-            plt.close()
-            gc.collect()  # Libera memória
+        print(caminho)
+        plt.savefig(caminho, format='png')
+        plt.close()
 
     # Geração de sinais digitais
 
