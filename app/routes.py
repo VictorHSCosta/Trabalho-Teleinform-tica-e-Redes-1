@@ -10,7 +10,7 @@ def index():
 def get_bits():
     text = request.args.get('text')  # Obtém o texto da query string
     if not text:
-        return jsonify({"error": "Texto não fornecido"}), 400
+        return jsonify({"bits_array": "Texto não encontrado."}),400
     
     bits_array = get_bytecode(text)
     return jsonify({"bits_array": bits_array})

@@ -62,7 +62,7 @@ h1 {
   background-color: #555;
 }
 
-h2 {
+#container2 > h2 {
   margin-top: 4rem;
   color: #333;
   text-align: center;
