@@ -1,5 +1,7 @@
 let selected;
 
+//variaveis e constantes
+
 const images = [
   { src: "../static/images/analogico/Sinal ASK.png", alt: "sinal ask" },
   { src: "../static/images/analogico/Sinal FSK.png", alt: "Sinal FSK" },
@@ -11,6 +13,18 @@ const images = [
   },
   { src: "../static/images/digital/Sinal NRZ.png", alt: "Sinal NRZ" },
 ];
+
+//funcoes js
+
+async function MenuErro(abrir) {
+  const container3 = document.getElementById("container3");
+  if (abrir) {
+    container3.style.display = "flex";
+    container3.style.flexDirection = "column";
+    return;
+  }
+  container3.style.display = "none";
+}
 
 function select(element) {
   const updateElement = selected;
@@ -31,6 +45,9 @@ async function atualizatexto() {
   if (!text) {
     document.getElementById("resultado").innerHTML = "";
     alert("Digite algo para converter");
+    const containerImagens = document.getElementById("container2");
+    containerImagens.innerHTML = "";
+    MenuErro(false);
     return;
   }
 
@@ -44,6 +61,7 @@ async function atualizatexto() {
     }
 
     await atualizaImagem();
+    MenuErro(true);
   } catch (error) {
     console.log(error);
   }
@@ -76,3 +94,29 @@ async function atualizaImagem() {
 }
 
 async function abrirConfiguracoes() {}
+
+async function enviarImagem(src) {
+  if (!selected) {
+    alert("Selecione uma imagem para enviar");
+    return;
+  }
+
+  const bits = document.getElementById("resultado").innerText;
+
+  if (!bits) {
+    alert("Digite algo para converter");
+    return;
+  }
+
+  const erro = document.getElementById("erro").value;
+
+  if (erro) {
+    alert("Digite um valor de erro");
+    return;
+  }
+
+  if (erro < 0 || erro > 100) {
+    alert("Digite um valor de erro entre 0 e 100");
+    return;
+  }
+}

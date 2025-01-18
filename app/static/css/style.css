@@ -62,7 +62,8 @@ h1 {
   background-color: #555;
 }
 
-#container2 > h2 {
+#container2 > h2,
+h2 {
   margin-top: 4rem;
   color: #333;
   text-align: center;
@@ -98,4 +99,29 @@ h1 {
 
 #imagens button:hover {
   transform: scale(1.05);
+}
+
+#container3 {
+  display: none;
+}
+
+#container3 > .input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  color: #333;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+#container3 > .input input {
+  border: 2px solid #e6e6e6;
+  border-radius: 10px;
+  width: 100%;
+  padding: 0.5rem;
+  color: #868686;
+  font-size: 1rem;
 }
