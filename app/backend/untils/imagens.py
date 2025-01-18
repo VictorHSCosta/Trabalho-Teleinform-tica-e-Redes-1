@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
-from digital import GeradorSinalDigital
-from analogico import GeradorSinalAnalogico
+from .digital import GeradorSinalDigital
+from .analogico import GeradorSinalAnalogico
 
 class GeradorDeOndas:
 

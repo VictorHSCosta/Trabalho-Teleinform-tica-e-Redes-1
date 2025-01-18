@@ -1,3 +1,9 @@
+# Data: 2021-09-12
+# Descrição: Arquivo responsável por converter texto em bytecode
+#
+
+from .config import run
+
 def get_bits_array(text):
         """
         Retorna um array onde cada bit é uma casa do array.
@@ -20,8 +26,10 @@ def get_bytecode(text):
 
     bytecode = get_bits_array(text)
     textBytecode = get_seven_bit_chunks(text)
+    run(bytecode)
 
     return textBytecode
+
 
 
 
