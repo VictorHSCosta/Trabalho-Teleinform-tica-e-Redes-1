@@ -1,7 +1,7 @@
 from flask import jsonify, render_template, request
 from app import app
 from app.backend.untils.bytecode import get_bytecode
-from app.backend.functions.erro import set_erro
+from app.backend.functions.Enviar import *
 
 @app.route('/')
 def index():
@@ -18,17 +18,22 @@ def get_bits():
 
 @app.route('/enviar', methods=['GET'])
 def enviar():
-    text = request.args.get('erro')  # Obtém o texto da query string
+    erro = request.args.get('erro')  # Obtém o texto da query string
+    text = request.args.get('bits') # Obtém o texto da query string
+    tipo = request.args.get('tipo') # Obtém o texto da query string
+
+    if not erro:
+        return jsonify({"erro": "Erro não encontrado."}),400
+
     if not text:
-        text = 0
+        return jsonify({"erro": "Erro não encontrado."}),400
     
     try:
-        set_erro(text)
+        enviarSinal(text)  
         return jsonify({"erro": text}),200
     except:
         return jsonify({"erro": "Erro na solicitação."}),400
-
-
+        
 
 if __name__ == '__main__':
     app.run(debug=True)

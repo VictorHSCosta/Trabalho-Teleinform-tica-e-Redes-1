@@ -3,13 +3,13 @@ let selected;
 //variaveis e constantes
 
 const images = [
-  { src: "../static/images/analogico/Sinal ASK.png", alt: "sinal ask" },
+  { src: "../static/images/analogico/Sinal ASK.png", alt: "Sinal ASK" },
   { src: "../static/images/analogico/Sinal FSK.png", alt: "Sinal FSK" },
   { src: "../static/images/analogico/Sinal PSK.png", alt: "Sinal PSK" },
-  { src: "../static/images/digital/Sinal Bipolar.png", alt: "sinal bipolar" },
+  { src: "../static/images/digital/Sinal Bipolar.png", alt: "Sinal Bipolar" },
   {
     src: "../static/images/digital/Sinal Manchester.png",
-    alt: "Sinal manchester",
+    alt: "Sinal Manchester",
   },
   { src: "../static/images/digital/Sinal NRZ.png", alt: "Sinal NRZ" },
 ];
@@ -27,6 +27,7 @@ async function MenuErro(abrir) {
 }
 
 function select(element) {
+  const img = element.children[0];
   const updateElement = selected;
   selected = element;
 
@@ -37,6 +38,8 @@ function select(element) {
   }
 
   element.style.border = "solid 2px #000";
+  const sinal = document.getElementById("sinal-a-enviar");
+  sinal.innerText = `Enviar ${img.alt}`;
 }
 
 async function atualizatexto() {
@@ -68,40 +71,34 @@ async function atualizatexto() {
 }
 
 async function atualizaImagem() {
-  const containerImagens = document.getElementById("container2");
+  const container2 = document.getElementById("container2");
+  container2.style.display = "flex";
+  const Imagens = document.querySelectorAll("#imagens >  button > img");
 
-  containerImagens.innerHTML = "";
+  console.log(images);
 
-  const h2 = document.createElement("h2");
-  h2.innerText = "Selecione uma das imagens para enviar";
-  containerImagens.appendChild(h2);
-
-  const div = document.createElement("imagens");
-  div.id = "imagens";
-
-  images.forEach((image) => {
-    const button = document.createElement("button");
-    const img = document.createElement("img");
-    img.src = `${image.src}?t=${new Date().getTime()}`;
-    img.alt = image.alt;
-    img.onclick = () => enviarImagem(image.src);
-    button.appendChild(img);
-    button.onclick = () => select(button);
-    div.appendChild(button);
+  Imagens.forEach((image, index) => {
+    image.innerHTML = "";
+    image.src = `${images[index].src}?t=${new Date().getTime()}`;
+    image.alt = images[index].alt;
   });
 
+  const containerImagens = document.getElementById("container2");
+  const div = document.createElement("div");
   containerImagens.appendChild(div);
+  const container4 = document.getElementById("container4");
+  container4.style.display = "flex";
 }
 
 async function abrirConfiguracoes() {}
 
-async function enviarImagem(src) {
+async function enviarImagem() {
   if (!selected) {
     alert("Selecione uma imagem para enviar");
     return;
   }
 
-  const bits = document.getElementById("resultado").innerText;
+  const bits = document.getElementById("resultado").value;
 
   if (!bits) {
     alert("Digite algo para converter");
@@ -110,7 +107,7 @@ async function enviarImagem(src) {
 
   const erro = document.getElementById("erro").value;
 
-  if (erro) {
+  if (erro === "") {
     alert("Digite um valor de erro");
     return;
   }
@@ -118,5 +115,27 @@ async function enviarImagem(src) {
   if (erro < 0 || erro > 100) {
     alert("Digite um valor de erro entre 0 e 100");
     return;
+  }
+
+  const tipo = document.getElementById("sinal-a-enviar").innerText;
+
+  console.log(tipo);
+
+  if (tipo === "") {
+    alert("Selecione um tipo de sinal para enviar");
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `/enviar?bits=${encodeURIComponent(bits)}&erro=${erro}&tipo=${tipo}`
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+    }
+  } catch (error) {
+    console.log(error);
   }
 }

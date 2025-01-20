@@ -63,12 +63,17 @@ h1 {
 }
 
 #container2 > h2,
-h2 {
+h2,
+div > h2 {
   margin-top: 4rem;
   color: #333;
   text-align: center;
   font-size: 1.2rem;
   font-weight: 400;
+}
+
+#container2 {
+  display: none;
 }
 
 #imagens {
@@ -124,4 +129,20 @@ h2 {
   padding: 0.5rem;
   color: #868686;
   font-size: 1rem;
+}
+
+#container4 {
+  display: none;
+  flex-direction: column;
+}
+
+#container4 > button {
+  display: block;
+  margin: 2rem auto;
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
 }

@@ -30,7 +30,27 @@
     <button class="button" onclick={atualizatexto()}>Gerar Ondas</button>
 
     <section id="container2">
-      <div id="imagens"></div>
+      <div id="imagens">
+        <button onclick={select(this)}>
+          <img>
+        </button>
+        <button onclick={select(this)}>
+          <img>
+        </button>
+        <button onclick={select(this)}>
+          <img>
+        </button>
+        <button onclick={select(this)}>
+          <img>
+        </button>
+        <button onclick={select(this)}>
+          <img>
+        </button>
+        <button onclick={select(this)}>
+          <img>
+        </button>
+
+      </div>
     </section>
 
     <section id="container3">
@@ -40,6 +60,13 @@
         <input type="text" id="erro" placeholder="Digite a porcentagem de erro">
       </div>
     </section>
+
+    <div id="container4">
+      <h2 id="sinal-a-enviar">Enviar</h2>
+      <button onclick="enviarImagem()">
+        Enviar
+      </button>
+    </div>
 
   </main>
 </body>
