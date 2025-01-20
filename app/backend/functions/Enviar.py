@@ -7,22 +7,21 @@ def calcularErro(text, erro=0):
     text = text.replace("\t", "")
     text = [i for i in text]
     text = [int(i) for i in text]
-
-    print("Erro: ", erro)
-    print("Texto sem erro: ", text)
     
     porcentagem = randint(0, 100)
-    if porcentagem < erro:
+
+    if porcentagem < int(erro):
         posicao = randint(0, text.__len__())
         text[posicao] = 1 if text[posicao] == 0 else 0 
         print("Erro na posição: ", posicao)
 
-    print("Texto com erro: ", text)
-
     return text 
+    
 
 def enviarSinal(text , erro):
     text = calcularErro(text , erro)
+
+    return text
 
     #socket aqui ..................
 

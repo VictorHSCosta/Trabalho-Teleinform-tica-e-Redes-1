@@ -1,7 +1,7 @@
 from flask import jsonify, render_template, request
 from app import app
 from app.backend.untils.bytecode import get_bytecode
-from app.backend.functions.Enviar import *
+from app.backend.functions.Enviar import enviarSinal
 
 @app.route('/')
 def index():
@@ -16,24 +16,29 @@ def get_bits():
     bits_array = get_bytecode(text)
     return jsonify({"bits_array": bits_array})
 
-@app.route('/enviar', methods=['GET'])
+@app.route('/enviar', methods=['POST'])
 def enviar():
-    erro = request.args.get('erro')  # Obtém o texto da query string
-    text = request.args.get('bits') # Obtém o texto da query string
-    tipo = request.args.get('tipo') # Obtém o texto da query string
+    data = request.get_json()  # Pega os dados JSON enviados pelo frontend
 
-    if not erro:
-        return jsonify({"erro": "Erro não encontrado."}),400
+    erro = data.get('erro')  
+    text = data.get('bits')
+    tipo = data.get('tipo')
 
-    if not text:
-        return jsonify({"erro": "Erro não encontrado."}),400
-    
+    if erro is None:
+        return jsonify({"erro": "O parâmetro 'erro' não foi enviado."}), 400
+
+    if text is None:
+        return jsonify({"erro": "O parâmetro 'bits' não foi enviado."}), 400
+
+    if tipo is None:
+        return jsonify({"erro": "O parâmetro 'tipo' não foi enviado."}), 400
+
     try:
-        enviarSinal(text)  
-        return jsonify({"erro": text}),200
-    except:
-        return jsonify({"erro": "Erro na solicitação."}),400
-        
+        enviarSinal(text, erro)  
+        return jsonify({"mensagem": f"Sinal enviado com sucesso: {text}"}), 200
+    except Exception as e:
+        return jsonify({"erro": f"Erro na solicitação: {str(e)}"}), 400
+
 
 if __name__ == '__main__':
     app.run(debug=True)

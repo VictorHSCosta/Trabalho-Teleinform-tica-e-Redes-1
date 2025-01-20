@@ -127,15 +127,22 @@ async function enviarImagem() {
   }
 
   try {
-    const response = await fetch(
-      `/enviar?bits=${encodeURIComponent(bits)}&erro=${erro}&tipo=${tipo}`
-    );
+    const response = await fetch("/enviar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ bits, erro, tipo }),
+    });
 
     if (response.ok) {
       const data = await response.json();
       console.log(data);
+    } else {
+      const errorData = await response.json();
+      console.log("Erro na resposta:", errorData);
     }
   } catch (error) {
-    console.log(error);
+    console.log("Erro na requisição:", error);
   }
 }
