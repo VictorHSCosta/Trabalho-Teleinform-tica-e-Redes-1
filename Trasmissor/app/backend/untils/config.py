@@ -30,3 +30,22 @@ def run(stream):
   Ondas.gerar_ondas_digitais()
   apagar_conteudo_images("app/static/images/analogico/")
   Ondas.gerar_ondas_analogicas()
+
+def configurar(energia , precisao, frequencia1, frequencia2):
+  Ondas.definir_energia(energia)
+  Ondas.definir_precisao(precisao)
+  Ondas.definir_frequencias(frequencia1, frequencia2)
+  apagar_conteudo_images("app/static/images/digital/")
+  Ondas.gerar_ondas_digitais()
+  apagar_conteudo_images("app/static/images/analogico/")
+  Ondas.gerar_ondas_analogicas()
+  print("Configuração realizada com sucesso")
+  return "Configuração realizada com sucesso"
+
+def get_config():
+    energia = Ondas.energia
+    precisao = Ondas.precisao
+    frequencia1 = Ondas.frequencia1
+    frequencia2 = Ondas.frequencia2
+    return {"energia": energia, "precisao": precisao, "frequencia1": frequencia1, "frequencia2": frequencia2}
+

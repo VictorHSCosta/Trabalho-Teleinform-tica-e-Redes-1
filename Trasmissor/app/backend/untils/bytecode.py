@@ -1,4 +1,4 @@
-# Data: 2021-09-12
+# Data: 2024-12-20
 # Descrição: Arquivo responsável por converter texto em bytecode
 #
 
