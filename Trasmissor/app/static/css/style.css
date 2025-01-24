@@ -176,7 +176,7 @@ div > h2 {
   padding: 0.5rem;
 }
 
-#nav-menu > label {
+#nav-menu > form > label {
   display: block;
   margin: 1rem 0;
   color: #333;
@@ -185,7 +185,7 @@ div > h2 {
   font-weight: 200;
 }
 
-#nav-menu > input {
+#nav-menu > form > input {
   display: block;
   margin: 1rem auto;
   background-color: #333;
@@ -196,11 +196,11 @@ div > h2 {
   cursor: pointer;
 }
 
-#nav-menu > input:hover {
+#nav-menu > form > input:hover {
   background-color: #555;
 }
 
-#nav-menu > button {
+#nav-menu > form > button {
   display: block;
   margin: 2rem auto;
   background-color: #333;

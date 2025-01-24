@@ -1,4 +1,9 @@
 let selected;
+let aberto = false;
+const form = document.getElementById("form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  SalvarCofiguraçoes();
+});
 
 //variaveis e constantes
 
@@ -145,4 +150,52 @@ async function enviarImagem() {
   } catch (error) {
     console.log("Erro na requisição:", error);
   }
+}
+
+function AbrirMenu() {
+  const container = document.getElementById("nav-menu");
+  container.style.display = "block";
+
+  if (aberto) {
+    container.style.display = "none";
+    aberto = false;
+    return;
+  }
+  aberto = true;
+}
+
+function SalvarCofiguraçoes() {
+  const precisao = document.getElementById("Precisao").value;
+  const energia = document.getElementById("Energia").value;
+  const frequencia1 = document.getElementById("Frequencia1").value;
+  const frequencia2 = document.getElementById("Frequencia2").value;
+
+  if (
+    precisao === "" ||
+    energia === "" ||
+    frequencia1 === "" ||
+    frequencia2 === ""
+  ) {
+    alert("Preencha todos os campos");
+    return;
+  }
+
+  fetch("/configurar", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ precisao, energia, frequencia1, frequencia2 }),
+  })
+    .then((response) => {
+      if (response.ok) {
+        alert("Configurações salvas com sucesso");
+      } else {
+        alert("Erro ao salvar configurações");
+      }
+    })
+    .catch((error) => {
+      console.error("Erro na requisição:", error);
+      alert("Erro ao salvar configurações");
+    });
 }

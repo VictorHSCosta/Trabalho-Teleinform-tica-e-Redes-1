@@ -23,22 +23,15 @@ def apagar_conteudo_images(caminho_pasta):
 def run(stream):
   print("Running")
   Ondas.definir_fluxo_bits(stream)
-  Ondas.definir_energia(1)
-  Ondas.definir_precisao(100)
-  Ondas.definir_frequencias(1, 2)
   apagar_conteudo_images("app/static/images/digital/")
   Ondas.gerar_ondas_digitais()
   apagar_conteudo_images("app/static/images/analogico/")
   Ondas.gerar_ondas_analogicas()
 
 def configurar(energia , precisao, frequencia1, frequencia2):
-  Ondas.definir_energia(energia)
-  Ondas.definir_precisao(precisao)
-  Ondas.definir_frequencias(frequencia1, frequencia2)
-  apagar_conteudo_images("app/static/images/digital/")
-  Ondas.gerar_ondas_digitais()
-  apagar_conteudo_images("app/static/images/analogico/")
-  Ondas.gerar_ondas_analogicas()
+  Ondas.definir_energia(int(energia))
+  Ondas.definir_precisao(int(precisao))
+  Ondas.definir_frequencias(int(frequencia1), int(frequencia2))
   print("Configuração realizada com sucesso")
   return "Configuração realizada com sucesso"
 
