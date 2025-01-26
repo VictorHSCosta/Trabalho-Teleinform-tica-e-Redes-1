@@ -94,6 +94,15 @@ div > h2 {
   border-radius: 1rem;
 }
 
+/* Estilo para imagens de sinais analógicos (não selecionáveis) */
+#imagens img.analogico {
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none; /* Impede qualquer interação com o elemento */
+  transition: none;
+}
+
+
 #imagens button {
   background-color: transparent;
   border: none;
@@ -144,5 +153,28 @@ div > h2 {
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Estilo para os containers de sinais analógicos e digitais */
+#analogico, #digital {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px; /* Espaçamento maior entre as imagens */
+  justify-content: center; /* Centraliza as imagens */
+  margin-bottom: 40px; /* Espaçamento entre as seções */
+}
+
+#analogico img,
+#digital img {
+  width: 200px; /* Aumenta o tamanho das imagens */
+  height: 200px; /* Garante proporção uniforme */
+  margin: 10px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+}
+
+#digital img:hover {
+  border: 2px solid #4CAF50;
   cursor: pointer;
 }

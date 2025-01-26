@@ -3,16 +3,14 @@ let selected;
 //variaveis e constantes
 
 const images = [
-  { src: "../static/images/analogico/Sinal ASK.png", alt: "Sinal ASK" },
-  { src: "../static/images/analogico/Sinal FSK.png", alt: "Sinal FSK" },
-  { src: "../static/images/analogico/Sinal PSK.png", alt: "Sinal PSK" },
-  { src: "../static/images/digital/Sinal Bipolar.png", alt: "Sinal Bipolar" },
-  {
-    src: "../static/images/digital/Sinal Manchester.png",
-    alt: "Sinal Manchester",
-  },
-  { src: "../static/images/digital/Sinal NRZ.png", alt: "Sinal NRZ" },
+  { src: "../static/images/analogico/Sinal ASK.png", alt: "Sinal ASK", tipo: "analogico" },
+  { src: "../static/images/analogico/Sinal FSK.png", alt: "Sinal FSK", tipo: "analogico" },
+  { src: "../static/images/analogico/Sinal PSK.png", alt: "Sinal PSK", tipo: "analogico" },
+  { src: "../static/images/digital/Sinal Bipolar.png", alt: "Sinal Bipolar", tipo: "digital" },
+  { src: "../static/images/digital/Sinal Manchester.png", alt: "Sinal Manchester", tipo: "digital" },
+  { src: "../static/images/digital/Sinal NRZ.png", alt: "Sinal NRZ", tipo: "digital" },
 ];
+
 
 //funcoes js
 
@@ -28,19 +26,27 @@ async function MenuErro(abrir) {
 
 function select(element) {
   const img = element.children[0];
+
+  // Impede a seleção de imagens analógicas
+  if (img.classList.contains("analogico")) {
+    alert("Não é possível selecionar sinais analógicos.");
+    return;
+  }
+
   const updateElement = selected;
   selected = element;
 
   try {
     updateElement.style.border = "none";
   } catch (error) {
-    console.log("No element selected yet");
+    console.log("Nenhum elemento selecionado ainda.");
   }
 
   element.style.border = "solid 2px #000";
   const sinal = document.getElementById("sinal-a-enviar");
   sinal.innerText = `Enviar ${img.alt}`;
 }
+
 
 async function atualizatexto() {
   const text = document.getElementById("entrada").value;
@@ -73,76 +79,106 @@ async function atualizatexto() {
 async function atualizaImagem() {
   const container2 = document.getElementById("container2");
   container2.style.display = "flex";
-  const Imagens = document.querySelectorAll("#imagens >  button > img");
 
-  console.log(images);
+  // Limpa o container para evitar duplicações
+  container2.innerHTML = "";
 
-  Imagens.forEach((image, index) => {
-    image.innerHTML = "";
-    image.src = `${images[index].src}?t=${new Date().getTime()}`;
-    image.alt = images[index].alt;
+  // Cria seções para analógicos e digitais
+  const tituloAnalogico = document.createElement("h3");
+  tituloAnalogico.innerText = "Sinais Analógicos (Exibição Apenas)";
+  container2.appendChild(tituloAnalogico);
+
+  const containerAnalogico = document.createElement("div");
+  containerAnalogico.id = "analogico";
+  containerAnalogico.style.display = "flex";
+  containerAnalogico.style.flexWrap = "wrap";
+  container2.appendChild(containerAnalogico);
+
+  const tituloDigital = document.createElement("h3");
+  tituloDigital.innerText = "Sinais Digitais (Selecionáveis)";
+  container2.appendChild(tituloDigital);
+
+  const containerDigital = document.createElement("div");
+  containerDigital.id = "digital";
+  containerDigital.style.display = "flex";
+  containerDigital.style.flexWrap = "wrap";
+  container2.appendChild(containerDigital);
+
+  // Adiciona imagens nos containers apropriados
+  images.forEach((imgData, index) => {
+    const button = document.createElement("button");
+    const img = document.createElement("img");
+    img.src = `${imgData.src}?t=${new Date().getTime()}`;
+    img.alt = imgData.alt;
+
+    if (imgData.tipo === "analogico") {
+      img.classList.add("analogico");
+      containerAnalogico.appendChild(button);
+    } else {
+      img.classList.add("digital");
+      button.onclick = () => select(button); // Apenas sinais digitais podem ser selecionados
+      containerDigital.appendChild(button);
+    }
+
+    button.appendChild(img);
   });
-
-  const containerImagens = document.getElementById("container2");
-  const div = document.createElement("div");
-  containerImagens.appendChild(div);
+  
   const container4 = document.getElementById("container4");
   container4.style.display = "flex";
 }
+
+
 
 async function abrirConfiguracoes() {}
 
 async function enviarImagem() {
   if (!selected) {
-    alert("Selecione uma imagem para enviar");
-    return;
+      alert("Selecione uma imagem para enviar");
+      return;
   }
+
+  const img = selected.children[0];
+  const tipo = img.alt.split(" ")[1]; // Extrai o tipo de modulação do 'alt'
+
+  console.log("Tipo de modulação selecionado:", tipo); // Log para verificar o valor
 
   const bits = document.getElementById("resultado").value;
 
   if (!bits) {
-    alert("Digite algo para converter");
-    return;
+      alert("Digite algo para converter");
+      return;
   }
 
   const erro = document.getElementById("erro").value;
 
   if (erro === "") {
-    alert("Digite um valor de erro");
-    return;
+      alert("Digite um valor de erro");
+      return;
   }
 
   if (erro < 0 || erro > 100) {
-    alert("Digite um valor de erro entre 0 e 100");
-    return;
-  }
-
-  const tipo = document.getElementById("sinal-a-enviar").innerText;
-
-  console.log(tipo);
-
-  if (tipo === "") {
-    alert("Selecione um tipo de sinal para enviar");
-    return;
+      alert("Digite um valor de erro entre 0 e 100");
+      return;
   }
 
   try {
-    const response = await fetch("/enviar", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ bits, erro, tipo }),
-    });
+      const response = await fetch("/enviar", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ bits, erro, tipo }),
+      });
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log(data);
-    } else {
-      const errorData = await response.json();
-      console.log("Erro na resposta:", errorData);
-    }
+      if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+      } else {
+          const errorData = await response.json();
+          console.log("Erro na resposta:", errorData);
+      }
   } catch (error) {
-    console.log("Erro na requisição:", error);
+      console.log("Erro na requisição:", error);
   }
 }
+
