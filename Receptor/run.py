@@ -1,6 +1,6 @@
 from app import app
 from threading import Thread
-from app.backend.functions.Enviar import iniciar_servidor
+from app.backend.functions.Receber import iniciar_servidor
 import os
 
 def start_socket_server():
