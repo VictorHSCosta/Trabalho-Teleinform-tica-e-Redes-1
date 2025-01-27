@@ -182,3 +182,53 @@ async function enviarImagem() {
   }
 }
 
+async function adicionarErro() {
+  const bitsOriginais = document.getElementById("resultado").innerHTML.trim(); // Limpa espaços
+  const erro = document.getElementById("erro").value.trim(); // Limpa espaços
+
+  // Validação de entrada
+  if (!bitsOriginais) {
+      alert("O trem de bits original está vazio. Converta um texto antes de aplicar o erro.");
+      return;
+  }
+  if (erro === "" || isNaN(erro) || erro < 0 || erro > 100) {
+      alert("Digite um valor de erro válido entre 0 e 100.");
+      return;
+  }
+
+  try {
+      // Envia o trem de bits e o erro para o backend
+      const response = await fetch("/calcular_erro", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ bits: bitsOriginais, erro }),
+      });
+
+      if (response.ok) {
+          const data = await response.json();
+          const bitsComErro = data.bits_com_erro; // Fluxo de bits com erro
+          const posicoesErro = data.posicoes_erro; // Posições dos bits alterados
+
+          // Gera HTML para destacar os bits alterados
+          const bitsFormatados = bitsComErro
+              .split("")
+              .map((bit, index) =>
+                  posicoesErro.includes(index) ? `<span style="color: red;">${bit}</span>` : bit
+              )
+              .join("");
+
+          // Atualiza a caixa de texto com o resultado
+          const resultadoComErro = document.getElementById("resultado-com-erro");
+          resultadoComErro.innerHTML = bitsFormatados;
+      } else {
+          const errorData = await response.json();
+          alert(`Erro: ${errorData.erro}`);
+      }
+  } catch (error) {
+      console.log("Erro ao calcular o erro:", error);
+      alert("Ocorreu um erro ao calcular o erro.");
+  }
+}
+
