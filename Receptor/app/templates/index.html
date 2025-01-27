@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Receptor</title>
   <link rel="stylesheet" href="../static/css/style.css">
   <script src="../static/js/script.js" defer></script>
 </head>
@@ -20,34 +20,42 @@
   </header>
 
   <main id="main">
-    <h1 class="coluna1">Receptor</h1>
+    <h1>Receptor</h1>
 
-    <div class="container1">
-      <textarea name="entrada" id="entrada" placeholder="Resposta" class="text-area" readonly></textarea>
+    <!-- Botão para receber os dados -->
+    <div id="receber-dados">
+      <button onclick="receberDados()">Receber Dados</button>
     </div>
 
-    <h2>Tratamento de erro usado</h2>
+    <!-- Área para exibir os bits destacados e corrigidos -->
+    <div id="erro-container">
+      <h3>Bits Recebidos com Erros Destacados:</h3>
+      <div id="fluxo-destacado" class="text-area" style="white-space: pre-wrap; font-family: monospace;"></div>
 
+      <h3>Bits Corrigidos:</h3>
+      <div id="fluxo-corrigido" class="text-area" style="white-space: pre-wrap; font-family: monospace;"></div>
+    </div>
+
+    <h2>Tratamento de Erro Usado</h2>
     <div id="container2">
       <button onclick="selectElement(this)">
-        <p>Codigo de hamming</p>
+        <p>Codigo de Hamming</p>
       </button>
       <button onclick="selectElement(this)">
         <p>CRC</p>
       </button>
       <button onclick="selectElement(this)">
-        <p>Bit paridade par</p>
+        <p>Bit Paridade Par</p>
       </button>
       <button onclick="selectElement(this)">
-        <p>Contagem de caracteres</p>
+        <p>Contagem de Caracteres</p>
       </button>
     </div>
 
+    <h2>Quadro Recebido</h2>
     <div>
-      <h2>Quadro recebido</h2>
-      <img src="Receptor/app/static/images/quadro/Quadro.png" alt="">
+      <img src="../static/images/quadro/Quadro.png" alt="">
     </div>
-
   </main>
 </body>
 

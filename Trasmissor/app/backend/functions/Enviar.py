@@ -53,16 +53,32 @@ def enviar_para_receptor(sinal, tipo):
     """
     Envia o sinal modulado ao receptor via socket.
     """
+    import numpy as np
+
     host = '192.168.100.8'  # Substitua pelo IP do receptor
     port = 12345  # Porta do receptor
 
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as cliente:
             cliente.connect((host, port))
-            # Converte o sinal modulado em string para envio
-            mensagem = f"{tipo}:{','.join(map(str, sinal))}"  # Separa os valores do sinal por vírgulas
+            
+            # Garante que o sinal não esteja vazio
+            if isinstance(sinal, np.ndarray) and sinal.size == 0:
+                print("Erro: O sinal modulado está vazio. Verifique a geração do sinal.")
+                return
+            elif not isinstance(sinal, np.ndarray) and len(sinal) == 0:
+                print("Erro: O sinal modulado está vazio. Verifique a geração do sinal.")
+                return
+            
+            # Formata o sinal corretamente para envio
+            sinal_str = ','.join(map(str, sinal))
+            mensagem = f"{tipo}:{sinal_str}"
+            
             cliente.sendall(mensagem.encode('utf-8'))
             print(f"Sinal enviado ao receptor: {mensagem}")
     except Exception as e:
         print(f"Erro ao conectar ao receptor: {e}")
         raise
+
+
+
