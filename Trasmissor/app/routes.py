@@ -50,3 +50,36 @@ def enviar():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)  # Porta do transmissor
+
+from flask import jsonify, request
+from app.backend.functions.Enviar import calcularErro
+
+@app.route('/calcular_erro', methods=['POST'])
+def calcular_erro():
+    """
+    Calcula e aplica erro ao trem de bits.
+    """
+    data = request.get_json()
+    bits = data.get("bits")
+    erro = int(data.get("erro"))
+
+    if not bits:
+        return jsonify({"erro": "O trem de bits não foi fornecido."}), 400
+
+    try:
+        # Limpa espaços em branco e converte para lista de inteiros
+        bits_lista = [int(bit) for bit in bits.strip() if bit.isdigit()]
+
+        # Calcula os erros e suas posições
+        bits_com_erro = calcularErro(bits_lista, erro)
+        posicoes_erro = [i for i in range(len(bits_lista)) if bits_lista[i] != bits_com_erro[i]]
+
+        return jsonify({
+            "bits_com_erro": "".join(map(str, bits_com_erro)),
+            "posicoes_erro": posicoes_erro
+        }), 200
+    except ValueError as e:
+        return jsonify({"erro": f"Erro ao processar os bits: {str(e)}"}), 400
+    except Exception as e:
+        return jsonify({"erro": f"Erro inesperado: {str(e)}"}), 500
+
