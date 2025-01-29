@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="../static/css/style.css">
+  <script src="../static/js/script.js" defer></script>
+</head>
+
+<body>
+  <header>
+    <button id="home" class="logoButton">
+      <img src="../static/images/site/podcasts_40dp_FFFFFF_FILL0_wght400_GRAD0_opsz40.svg" alt="" class="logo">
+    </button>
+    <button id="menu" class="logoButton">
+      <img src="../static/images/site/menu_40dp_FFFFFF_FILL0_wght400_GRAD0_opsz40.svg" alt="">
+    </button>
+  </header>
+
+  <main id="main">
+    <h1 class="coluna1">Receptor</h1>
+
+    <div class="container1">
+      <textarea name="entrada" id="entrada" placeholder="Resposta" class="text-area" readonly></textarea>
+    </div>
+
+    <h2>Tratamento de erro usado</h2>
+
+    <div id="container2">
+      <button onclick="selectElement(this)">
+        <p>Codigo de hamming</p>
+      </button>
+      <button onclick="selectElement(this)">
+        <p>CRC</p>
+      </button>
+      <button onclick="selectElement(this)">
+        <p>Bit paridade par</p>
+      </button>
+      <button onclick="selectElement(this)">
+        <p>Contagem de caracteres</p>
+      </button>
+    </div>
+
+    <div>
+      <h2>Quadro recebido</h2>
+      <img src="Receptor/app/static/images/quadro/Quadro.png" alt="">
+    </div>
+
+  </main>
+</body>
+
+</html>

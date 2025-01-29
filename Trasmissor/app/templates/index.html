@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontSize: {
+            'base': '1.2rem',
+          }
+        }
+      }
+    }
+  </script>
+
+  <script src="../static/js/script.js" defer></script>
+</head>
+
+<body class="text-base">
+  <header class="bg-gray-800 p-4 flex justify-between">
+    <button id="home" class="logoButton bg-gray-800 text-white border-none">
+      <img src="../static/images/site/podcasts_40dp_FFFFFF_FILL0_wght400_GRAD0_opsz40.svg" alt="" class="logo">
+    </button>
+    <button id="menu" class="logoButton bg-gray-800 text-white border-none">
+      <img src="../static/images/site/menu_40dp_FFFFFF_FILL0_wght400_GRAD0_opsz40.svg" alt="">
+    </button>
+  </header>
+
+  <main id="main" class="flex flex-col px-16 py-16">
+    <h1 class="coluna1 mb-4 text-gray-800 text-center text-4xl">Trasmissor</h1>
+
+    <div class="container1 flex justify-center items-center gap-4">
+      <textarea name="entrada" id="entrada" placeholder="Digite seu texto aqui" class="text-area border-2 border-gray-300 rounded-lg w-full h-48 p-4 mb-4 text-gray-600 text-base"></textarea>
+      <textarea name="resultado" id="resultado" placeholder="resultado" class="text-area border-2 border-gray-300 rounded-lg w-full h-48 p-4 mb-4 text-gray-600 text-base" readonly></textarea>
+    </div>
+
+    <button class="button bg-gray-800 text-white border-none py-2 px-4 rounded-lg cursor-pointer hover:bg-gray-700 transition-colors" onclick="atualizatexto()">Gerar Ondas</button>
+
+    <section id="container2" class="hidden">
+      <h2 class="mt-16 text-gray-800 text-center text-xl font-normal">Selecione uma imagem</h2>
+      <div id="imagens" class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
+        <button onclick="select(this)" class="bg-transparent border-none transition-transform duration-300 ease-in-out cursor-pointer hover:scale-105 shadow-md">
+          <img class="w-full h-auto rounded-lg">
+        </button>
+        <button onclick="select(this)" class="bg-transparent border-none transition-transform duration-300 ease-in-out cursor-pointer hover:scale-105 shadow-md">
+          <img class="w-full h-auto rounded-lg">
+        </button>
+        <button onclick="select(this)" class="bg-transparent border-none transition-transform duration-300 ease-in-out cursor-pointer hover:scale-105 shadow-md">
+          <img class="w-full h-auto rounded-lg">
+        </button>
+        <button onclick="select(this)" class="bg-transparent border-none transition-transform duration-300 ease-in-out cursor-pointer hover:scale-105 shadow-md">
+          <img class="w-full h-auto rounded-lg">
+        </button>
+        <button onclick="select(this)" class="bg-transparent border-none transition-transform duration-300 ease-in-out cursor-pointer hover:scale-105 shadow-md">
+          <img class="w-full h-auto rounded-lg">
+        </button>
+        <button onclick="select(this)" class="bg-transparent border-none transition-transform duration-300 ease-in-out cursor-pointer hover:scale-105 shadow-md">
+          <img class="w-full h-auto rounded-lg">
+        </button>
+      </div>
+    </section>
+
+    <section id="container3" class="hidden">
+      <h2 class="mt-16 text-gray-800 text-center text-xl font-normal">Selecione o erro que voce deseja acresentar ao envio</h2>
+      <div class="input flex justify-center items-center gap-4 mt-8">
+        <label for="erro" class="text-gray-800">Erro:</label>
+        <input type="text" id="erro" placeholder="Digite a porcentagem de erro" class="border-2 border-gray-300 rounded-lg w-full p-2 text-gray-600 text-base">
+      </div>
+
+      <div id="erro-container" class="mt-8 flex flex-col items-start">
+        <button onclick="adicionarErro()" id="acrescentar-erro" class="bg-gray-800 text-white border-none py-2 px-4 rounded-lg cursor-pointer hover:bg-gray-700 transition-colors mb-4">Acrescentar</button>
+        <textarea id="resultado-com-erro" readonly placeholder="Novo trem de bits com erro" class="w-full h-20 p-2 border border-gray-300 rounded-lg font-mono bg-gray-100"></textarea>
+      </div>
+    </section>
+
+    <div id="container4" class="hidden flex-col">
+      <h2 id="sinal-a-enviar" class="mt-16 text-gray-800 text-center text-xl font-normal">Enviar</h2>
+      <button onclick="enviarImagem()" class="bg-gray-800 text-white border-none py-2 px-4 rounded-lg cursor-pointer hover:bg-gray-700 transition-colors mt-8 mx-auto">
+        Enviar
+      </button>
+    </div>
+  </main>
+</body>
+
+</html>

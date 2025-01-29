@@ -1,0 +1,80 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 1.2rem;
+}
+
+header {
+  background-color: #00ca9e;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.logoButton {
+  background-color: #00ca9e;
+  color: white;
+  border: none;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  padding: 4rem 4rem;
+}
+
+.text-area {
+  border: 2px solid #00ca9e;
+  border-radius: 10px;
+  width: 100%;
+  height: 20vh;
+  padding: 1rem;
+  margin: 1rem 0;
+  color: #00ca9e;
+  font-size: 1rem;
+}
+
+h1 {
+  margin-bottom: 1rem;
+  color: #333;
+  text-align: center;
+  font-size: 2rem;
+}
+
+.container1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+#container2 > h2,
+h2,
+div > h2 {
+  margin-top: 4rem;
+  color: #333;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+#container2 {
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+#container2 > button {
+  border: 2px solid #00ca9e;
+  background-color: transparent;
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+}
+
+#container2 > button:hover {
+  background-color: #00ca9e;
+  color: #ffffff;
+}
