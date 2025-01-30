@@ -1,10 +1,19 @@
-from flask import Flask, jsonify
-from Backend_teste_junto.conversores import bits_para_texto
-from Backend_teste_junto.hamming import hamming_decode
-from Backend_teste_junto.demodulador import demodular_nrz, demodular_manchester, demodular_bipolar
+from flask import Flask, render_template, request, jsonify
+from backend.conversores import bits_para_texto
+from backend.hamming import hamming_decode
+from backend.demodulador import demodular_nrz, demodular_manchester, demodular_bipolar
 import socket
 import threading
 import json
+
+class Config:
+    text = ""
+    TremDebits = ""
+    TremDebitsCorrigido = ""
+    HouveErro = False
+    MetodoEscolhido = ""
+    BitErrado = 0
+
 
 app = Flask(__name__)
 
@@ -31,6 +40,7 @@ def servidor_socket():
             tipo_modulacao = dados["tipo_modulacao"].lower()
 
             # Demodulação
+            print(f"Demodulando sinal modulado com {tipo_modulacao}...")
             if tipo_modulacao == "nrz":
                 bits_demodulados = demodular_nrz(sinal_modulado)
             elif tipo_modulacao == "manchester":
@@ -54,6 +64,8 @@ def servidor_socket():
             # Enviar resposta para o cliente
             resposta = json.dumps({"texto_recebido": texto_recebido})
             conexao.sendall(resposta.encode())
+
+            print(f"Texto recebido: {texto_recebido}")
         
         except Exception as e:
             conexao.sendall(json.dumps({"erro": f"Erro inesperado: {str(e)}"}).encode())
@@ -66,7 +78,7 @@ thread_socket.start()
 
 @app.route('/')
 def index():
-    return jsonify({"mensagem": "Servidor Flask + Socket rodando!"})
+    return render_template("index.html")
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=3000)

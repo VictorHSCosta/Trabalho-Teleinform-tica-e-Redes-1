@@ -1,6 +1,5 @@
 import random
 
-
 def adicionar_erro(bits, porcentagem_erro):
     """
     Adiciona erros ao trem de bits com base em uma porcentagem definida.

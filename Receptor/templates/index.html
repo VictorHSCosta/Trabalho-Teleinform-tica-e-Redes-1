@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Receptor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../static/javaScript/scripts.js" defer></script>
+</head>
+
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 text-white font-sans h-screen flex flex-col">
+
+  <!-- Cabeçalho -->
+  <header class="bg-gray-900 shadow-lg p-4 flex items-center justify-between">
+    <button id="home" class="flex items-center space-x-2 hover:opacity-80 transition">
+      <img src="../static/siteImagens/send_to_mobile_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="Logo" class="w-10 h-10">
+      <span class="text-lg font-semibold">Receptor</span>
+    </button>
+  </header>
+
+  <!-- Corpo Principal -->
+  <main class="flex flex-col justify-center items-center flex-1">
+    <h1 class="mb-6 text-3xl font-bold text-gray-300 text-center">Receptor de Dados</h1>
+
+    <div class="bg-gray-800 p-6 rounded-xl shadow-md w-full max-w-md">
+      <label for="input" class="text-gray-400 block mb-2">Bits a receber:</label>
+      <input type="text" id="input" placeholder="Digite os bits recebidos" class="w-full p-3 border border-gray-600 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-gray-500 focus:outline-none placeholder-gray-400">
+
+      <h2 class="text-xl font-semibold text-gray-300 mt-4">Tipo de onda enviada</h2>
+      <img src="" alt="Onda" class="w-full mt-2 rounded-lg shadow-md">
+
+      <h2 class="text-xl font-semibold text-gray-300 mt-4">Bits recebidos</h2>
+      <p id="output" class="text-gray-400 bg-gray-700 p-3 rounded-md">...</p>
+      <textarea id="receivedBits" class="w-full p-3 border border-gray-600 bg-gray-700 text-white rounded-lg mt-2 focus:ring-2 focus:ring-gray-500 focus:outline-none placeholder-gray-400" rows="2"></textarea>
+
+      <h2 class="text-xl font-semibold text-gray-300 mt-4">Método de detecção de erro escolhido</h2>
+      <p class="text-gray-400 bg-gray-700 p-3 rounded-md">Manchester</p>
+
+      <h2 class="text-xl font-semibold text-gray-300 mt-4">Houve erros?</h2>
+      <p id="error" class="text-gray-400 bg-gray-700 p-3 rounded-md">Não</p>
+
+      <h2 class="text-xl font-semibold text-gray-300 mt-4">Bits corrigidos</h2>
+      <p id="corrigido" class="text-gray-400 bg-gray-700 p-3 rounded-md">001</p>
+
+      <h2 class="text-xl font-semibold text-gray-300 mt-4">Texto Final</h2>
+      <textarea id="finalText" class="w-full p-3 border border-gray-600 bg-gray-700 text-white rounded-lg mt-2 focus:ring-2 focus:ring-gray-500 focus:outline-none placeholder-gray-400" rows="3"></textarea>
+    </div>
+  </main>
+
+</body>
+
+</html>

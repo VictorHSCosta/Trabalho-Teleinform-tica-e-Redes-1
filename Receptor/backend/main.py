@@ -1,7 +1,7 @@
-from adicionar_erro import adicionar_erro
-from conversores import texto_para_bits, bits_para_texto
-from hamming import hamming_encode, hamming_decode
-from demodulador import demodular_nrz, demodular_manchester, demodular_bipolar
+from backend.adicionar_erro import adicionar_erro
+from backend.conversores import texto_para_bits, bits_para_texto
+from backend.hamming import hamming_encode, hamming_decode
+from backend.demodulador import demodular_nrz, demodular_manchester, demodular_bipolar
 from modulador import modular_nrz, modular_manchester, modular_bipolar
 
 def main():
