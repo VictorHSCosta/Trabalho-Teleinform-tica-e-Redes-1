@@ -1,6 +1,6 @@
 import matplotlib  # Importa a biblioteca Matplotlib para gerar gráficos
-from analogico import GeradorSinalAnalogico  # Importa a classe para geração de sinais analógicos
-from digital import GeradorSinalDigital  # Importa a classe para geração de sinais digitais
+from .analogico import GeradorSinalAnalogico  # Importa a classe para geração de sinais analógicos
+from .digital import GeradorSinalDigital  # Importa a classe para geração de sinais digitais
 matplotlib.use('Agg')  # Define o backend como 'Agg' (modo não interativo, ideal para servidores)
 import matplotlib.pyplot as plt  # Importa a biblioteca de plotagem
 from threading import Lock  # Importa Lock para garantir sincronização de threads

@@ -1,13 +1,14 @@
 import socket
 import json
-from adicionar_erro import adicionar_erro
-from conversores import texto_para_bits
-from hamming import hamming_encode
-from modulador import modular_nrz, modular_manchester, modular_bipolar
+from .adicionar_erro import adicionar_erro
+from .conversores import texto_para_bits
+from .hamming import hamming_encode
+from .modulador import modular_nrz, modular_manchester, modular_bipolar
 
-def enviar_dados(texto):
+
+def enviar_dados(HOST ,texto ,tipo_modulacao,porcentagem_erro, enquadramento, deteccao_erro):
     # Configuração do cliente socket
-    HOST = input("Digite o IP do servidor: ")  # O usuário pode digitar o IP do servidor Flask
+  # O usuário pode digitar o IP do servidor Flask
     PORTA = 12345  # Mesma porta do servidor
 
     # Criar o socket
@@ -23,12 +24,15 @@ def enviar_dados(texto):
     print(f"Bits codificados com Hamming: {bits_codificados}")
 
     # Adicionar erros (opcional)
-    porcentagem_erro = float(input("Digite a porcentagem de erro a ser adicionada (0-100): "))
+    porcentagem_erro = float(porcentagem_erro)
+    if porcentagem_erro < 0 or porcentagem_erro > 100:
+        print("Porcentagem de erro inválida!")
+        return
     bits_com_erro = adicionar_erro(list(map(int, bits_codificados)), porcentagem_erro)
     print(f"Bits com erro: {bits_com_erro}")
 
     # Escolha da modulação
-    tipo_modulacao = input("Escolha a modulação (NRZ, Manchester, Bipolar): ").lower()
+    tipo_modulacao = tipo_modulacao.lower()
     amostras_por_bit = int(input("Digite o número de amostras por bit: "))
 
     if tipo_modulacao == "nrz":

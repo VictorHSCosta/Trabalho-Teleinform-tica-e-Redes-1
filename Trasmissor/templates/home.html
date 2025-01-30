@@ -42,9 +42,9 @@
     <section id="container_analogico" class="mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-center">📡 Sinais Analógicos</h2>
       <div id="imagens_analogico" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <img src="" alt="" class="w-full h-auto rounded-lg shadow-lg">
-        <img src="" alt="" class="w-full h-auto rounded-lg shadow-lg">
-        <img src="" alt="" class="w-full h-auto rounded-lg shadow-lg">
+        <img src="" alt="" class="w-full h-auto rounded-lg shadow-lg cursor-pointer" onclick="expandirImagem(this)">
+        <img src="" alt="" class="w-full h-auto rounded-lg shadow-lg cursor-pointer" onclick="expandirImagem(this)">
+        <img src="" alt="" class="w-full h-auto rounded-lg shadow-lg cursor-pointer" onclick="expandirImagem(this)">
       </div>
     </section>
 
@@ -52,11 +52,18 @@
     <section id="container_digital" class="mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-center">📡 Sinais Digitais</h2>
       <div id="imagens_digital" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <img src="" alt="" class="w-full h-auto rounded-lg shadow-lg">
-        <img src="" alt="" class="w-full h-auto rounded-lg shadow-lg">
-        <img src="" alt="" class="w-full h-auto rounded-lg shadow-lg">
+        <img src="" alt="" class="w-full h-auto rounded-lg shadow-lg cursor-pointer" onclick="expandirImagem(this)">
+        <img src="" alt="" class="w-full h-auto rounded-lg shadow-lg cursor-pointer" onclick="expandirImagem(this)">
+        <img src="" alt="" class="w-full h-auto rounded-lg shadow-lg cursor-pointer" onclick="expandirImagem(this)">
       </div>
     </section>
+
+    <!-- Modal de Imagem em Tela Cheia -->
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center hidden">
+      <span class="absolute top-5 right-5 text-white text-3xl cursor-pointer" onclick="fecharModal()">✖</span>
+      <img id="modalImg" class="max-w-5xl max-h-screen rounded-lg shadow-lg">
+    </div>
+
 
     <!-- Escolha do Modo de Envio -->
     <div id="container_escolha" class="mb-8">
@@ -93,9 +100,10 @@
       <div class="flex items-center justify-center gap-4">
         <label for="erro" class="font-semibold">Erro (%):</label>
         <input type="number" id="erro" placeholder="Digite a porcentagem de erro" class="border border-gray-600 bg-gray-700 text-white rounded-lg p-3 w-32 
-                      focus:ring-2 focus:ring-gray-500 focus:outline-none">
+                  focus:ring-2 focus:ring-gray-500 focus:outline-none">
       </div>
     </section>
+
 
     <!-- Botão de Enviar -->
     <div id="container4">
