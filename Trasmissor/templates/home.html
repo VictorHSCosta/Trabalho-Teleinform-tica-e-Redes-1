@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transmissor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../static/javaScript/home.js" defer></script>
+</head>
+
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 text-white font-sans h-screen flex flex-col">
+
+  <!-- Cabeçalho -->
+  <header class="bg-gray-900 shadow-lg p-4 flex items-center justify-between">
+    <button id="home" class="flex items-center space-x-2 hover:opacity-80 transition">
+      <img src="../static/siteImagens/send_to_mobile_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="Logo" class="w-10 h-10">
+      <span class="text-lg font-semibold">Transmissor</span>
+    </button>
+  </header>
+
+  <!-- Corpo Principal -->
+  <main id="main" class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold mb-6 text-center text-gray-300">Transmissor de Sinais</h1>
+
+    <!-- Área de Texto -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <textarea id="entrada" placeholder="Digite seu texto aqui" class="w-full p-3 border border-gray-600 bg-gray-700 text-white rounded-lg 
+                  focus:ring-2 focus:ring-gray-500 focus:outline-none placeholder-gray-400 h-40"></textarea>
+      <textarea id="resultado" placeholder="Resultado" class="w-full p-3 border border-gray-600 bg-gray-600 text-gray-300 rounded-lg 
+                  h-40" readonly></textarea>
+    </div>
+
+
+    <!-- Botão de Gerar Ondas -->
+    <button class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg 
+                   text-lg transition duration-300 ease-in-out mb-8" onclick="converterTextoParaBits()">
+      🎵 Gerar Ondas
+    </button>
+
+    <!-- Sinais Analógicos -->
+    <section id="container_analogico" class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-center">📡 Sinais Analógicos</h2>
+      <div id="imagens_analogico" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <img src="" alt="" class="w-full h-auto rounded-lg shadow-lg cursor-pointer" onclick="expandirImagem(this)">
+        <img src="" alt="" class="w-full h-auto rounded-lg shadow-lg cursor-pointer" onclick="expandirImagem(this)">
+        <img src="" alt="" class="w-full h-auto rounded-lg shadow-lg cursor-pointer" onclick="expandirImagem(this)">
+      </div>
+    </section>
+
+    <!-- Sinais Digitais -->
+    <section id="container_digital" class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-center">📡 Sinais Digitais</h2>
+      <div id="imagens_digital" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <img src="" alt="" class="w-full h-auto rounded-lg shadow-lg cursor-pointer" onclick="expandirImagem(this)">
+        <img src="" alt="" class="w-full h-auto rounded-lg shadow-lg cursor-pointer" onclick="expandirImagem(this)">
+        <img src="" alt="" class="w-full h-auto rounded-lg shadow-lg cursor-pointer" onclick="expandirImagem(this)">
+      </div>
+    </section>
+
+    <!-- Modal de Imagem em Tela Cheia -->
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center hidden">
+      <span class="absolute top-5 right-5 text-white text-3xl cursor-pointer" onclick="fecharModal()">✖</span>
+      <img id="modalImg" class="max-w-5xl max-h-screen rounded-lg shadow-lg">
+    </div>
+
+
+    <!-- Escolha do Modo de Envio -->
+    <div id="container_escolha" class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-center">📡 Selecione o Modo de Envio</h2>
+      <div class="flex flex-wrap justify-center gap-4">
+        <button class="bg-gray-600 text-white p-2 rounded" data-modo="NRZ" onclick="selecionarModo(this)">NRZ</button>
+        <button class="bg-gray-600 text-white p-2 rounded" data-modo="Manchester" onclick="selecionarModo(this)">Manchester</button>
+        <button class="bg-gray-600 text-white p-2 rounded" data-modo="Bipolar" onclick="selecionarModo(this)">Bipolar</button>
+      </div>
+    </div>
+
+    <!-- Escolha do Enquadramento -->
+    <div id="container_enquadramento" class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-center">📏 Selecione o Enquadramento</h2>
+      <div class="flex flex-wrap justify-center gap-4">
+        <button class="bg-gray-600 text-white p-2 rounded" data-enquadramento="Contagem de bit" onclick="selecionarEnquadramento(this)">Contagem de bit</button>
+        <button class="bg-gray-600 text-white p-2 rounded" data-enquadramento="Inserção de bytes" onclick="selecionarEnquadramento(this)">Inserção de bytes</button>
+      </div>
+    </div>
+
+    <!-- Detecção e Correção de Erros -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-center">🚨 Detecção e Correção de Erros</h2>
+      <div class="flex flex-wrap justify-center gap-4">
+        <button class="bg-gray-600 text-white p-2 rounded" data-deteccao="Código de Hamming" onclick="selecionarDeteccao(this)">Código de Hamming</button>
+        <button class="bg-gray-600 text-white p-2 rounded" data-deteccao="Bit de paridade" onclick="selecionarDeteccao(this)">Bit de paridade</button>
+        <button class="bg-gray-600 text-white p-2 rounded" data-deteccao="CRC" onclick="selecionarDeteccao(this)">CRC</button>
+      </div>
+    </div>
+
+    <!-- Adicionar Erro -->
+    <section id="container4" class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4 text-center">⚠️ Adicionar Erro no Envio</h2>
+      <div class="flex items-center justify-center gap-4">
+        <label for="erro" class="font-semibold">Erro (%):</label>
+        <input type="number" id="erro" placeholder="Digite a porcentagem de erro" class="border border-gray-600 bg-gray-700 text-white rounded-lg p-3 w-32 
+                  focus:ring-2 focus:ring-gray-500 focus:outline-none">
+      </div>
+    </section>
+
+
+    <!-- Botão de Enviar -->
+    <div id="container4">
+      <h2 class="text-2xl font-semibold mb-4 text-center">📨 Enviar Sinal</h2>
+      <button onclick="enviarConfiguracoes()" class="w-full bg-red-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg 
+                     text-lg transition duration-300 ease-in-out">
+        Enviar
+      </button>
+    </div>
+
+  </main>
+
+</body>
+
+</html>
