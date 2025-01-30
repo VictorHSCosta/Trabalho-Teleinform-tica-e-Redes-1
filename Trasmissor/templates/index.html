@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transmissor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../static/javaScript/scripts.js" defer></script>
+</head>
+
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 text-white font-sans h-screen flex flex-col">
+
+  <!-- Cabeçalho -->
+  <header class="bg-gray-900 shadow-lg p-4 flex items-center justify-between">
+    <button id="home" class="flex items-center space-x-2 hover:opacity-80 transition">
+      <img src="../static/siteImagens/send_to_mobile_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="Logo" class="w-10 h-10">
+      <span class="text-lg font-semibold">Transmissor</span>
+    </button>
+  </header>
+
+  <!-- Corpo Principal -->
+  <main id="main" class="flex flex-col justify-center items-center flex-1">
+    <h1 class="mb-6 text-3xl font-bold text-gray-300 text-center">Conecte-se ao Socket</h1>
+
+    <div class="bg-gray-800 p-6 rounded-xl shadow-md w-full max-w-md">
+      <p class="text-gray-400 mb-4 text-center">Digite seu IP para conectar</p>
+
+      <input type="text" id="ipInput" placeholder="Digite seu IP aqui" class="w-full p-3 border border-gray-600 bg-gray-700 text-white rounded-lg 
+                    focus:ring-2 focus:ring-gray-500 focus:outline-none placeholder-gray-400">
+
+      <button class="w-full mt-4 bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-lg 
+                     text-lg font-semibold transition duration-300 ease-in-out" onclick="verificarIP()">
+        Conectar
+      </button>
+    </div>
+  </main>
+
+</body>
+
+</html>
