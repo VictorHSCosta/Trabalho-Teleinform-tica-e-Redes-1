@@ -2,3 +2,5 @@ myenv/myenv/
 
 app/static/images/digital
 app/static/images/analogico
+__pycache__/
+*.pyc
