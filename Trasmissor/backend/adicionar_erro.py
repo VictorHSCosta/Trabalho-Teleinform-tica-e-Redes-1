@@ -13,6 +13,9 @@ def adicionar_erro(bits, erro_percentual):
     """
     # Gera um número aleatório de 0 a 100
     chance_erro = random.uniform(0, 100)
+
+    # Inicializa a lista de índices dos bits que foram alterados
+    indices_erro = []
     
     # Se a chance for menor que o erro_percentual, introduz erro
     if chance_erro < erro_percentual:
@@ -28,4 +31,6 @@ def adicionar_erro(bits, erro_percentual):
         for index in indices_erro:
             bits[index] ^= 1  # Alterna entre 0 e 1
 
-    return bits  # Retorna o novo trem de bits (com ou sem erro)
+    return [bits , indices_erro]  # Retorna o novo trem de bits (com ou sem erro)
+
+

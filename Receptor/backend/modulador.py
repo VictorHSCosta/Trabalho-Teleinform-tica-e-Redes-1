@@ -1,48 +1,41 @@
 import numpy as np
 
-def modular_nrz(bits, amostras_por_bit=100):
-    """
-    Modula um trem de bits em NRZ e gera um sinal digital contínuo.
-    :param bits: Lista de bits (0 ou 1).
-    :param amostras_por_bit: Número de amostras por bit no sinal digital.
-    :return: Lista representando o sinal digital contínuo.
-    """
-    sinal = []
-    for bit in bits:
-        valor = -1 if bit == 0 else 1
-        sinal.extend([valor] * amostras_por_bit)  # Repete o valor para cada amostra
-    return sinal
+def nrz_modulacao(bits):
+    """Modula os bits usando NRZ (Non-Return-to-Zero)."""
+    return np.array([1 if bit == 1 else -1 for bit in bits])
 
-def modular_manchester(bits, amostras_por_bit=100):
-    """
-    Modula um trem de bits em Manchester e gera um sinal digital contínuo.
-    :param bits: Lista de bits (0 ou 1).
-    :param amostras_por_bit: Número de amostras por bit no sinal digital.
-    :return: Lista representando o sinal digital contínuo.
-    """
-    sinal = []
-    metade = amostras_por_bit // 2
-    for bit in bits:
-        if bit == 0:
-            sinal.extend([0] * metade + [1] * metade)  # Transição 0 -> 1
-        else:
-            sinal.extend([1] * metade + [0] * metade)  # Transição 1 -> 0
-    return sinal
-
-def modular_bipolar(bits, amostras_por_bit=100):
-    """
-    Modula um trem de bits em bipolar e gera um sinal digital contínuo.
-    :param bits: Lista de bits (0 ou 1).
-    :param amostras_por_bit: Número de amostras por bit no sinal digital.
-    :return: Lista representando o sinal digital contínuo.
-    """
-    sinal = []
-    toggle = 1
+def bipolar_modulacao(bits):
+    """Modula os bits usando codificação Bipolar."""
+    bipolar = []
+    last = -1  # Começa com -1, pois alterna entre -1 e +1
     for bit in bits:
         if bit == 1:
-            sinal.extend([toggle] * amostras_por_bit)
-            toggle *= -1
+            last = -last
+            bipolar.append(last)
         else:
-            sinal.extend([0] * amostras_por_bit)
-    return sinal
+            bipolar.append(0)
+    return np.array(bipolar)
 
+def manchester_modulacao(bits):
+    """Modula os bits usando Manchester."""
+    manchester = []
+    for bit in bits:
+        if bit == 1:
+            manchester.extend([1, -1])  # Sobe depois desce
+        else:
+            manchester.extend([-1, 1])  # Desce depois sobe
+    return np.array(manchester)
+
+def modular_quadros(quadros, metodo):
+    """Aplica a modulação escolhida (NRZ, Bipolar ou Manchester) a todos os quadros."""
+    sinais = []
+    for quadro in quadros:
+        if metodo == "NRZ":
+            sinais.append(nrz_modulacao(quadro))
+        elif metodo == "Bipolar":
+            sinais.append(bipolar_modulacao(quadro))
+        elif metodo == "Manchester":
+            sinais.append(manchester_modulacao(quadro))
+        else:
+            raise ValueError("Método de modulação inválido. Escolha entre 'NRZ', 'Bipolar' ou 'Manchester'.")
+    return sinais

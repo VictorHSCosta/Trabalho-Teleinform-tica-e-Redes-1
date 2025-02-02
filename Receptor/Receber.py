@@ -1,18 +1,10 @@
 from flask import Flask, render_template, request, jsonify
 from backend.conversores import bits_para_texto
-from backend.hamming import hamming_decode
-from backend.demodulador import demodular_nrz, demodular_manchester, demodular_bipolar
 import socket
 import threading
 import json
+from backend.arrumar_codigo import arrumar_codigo
 
-class Config:
-    text = ""
-    TremDebits = ""
-    TremDebitsCorrigido = ""
-    HouveErro = False
-    MetodoEscolhido = ""
-    BitErrado = 0
 
 
 app = Flask(__name__)
@@ -20,6 +12,8 @@ app = Flask(__name__)
 # Configuração do servidor socket
 HOST = '0.0.0.0'  # Permite conexões de qualquer computador na rede
 PORTA = 12345  # Porta do servidor socket
+
+texto = ""
 
 def servidor_socket():
     """Servidor TCP que recebe os dados"""
@@ -31,41 +25,47 @@ def servidor_socket():
     while True:
         conexao, endereco = servidor.accept()
         print(f"Conexão estabelecida com: {endereco}")
+        print("Recebendo dados...")
+        
 
         try:
             # Recebe os dados e converte de JSON
             dados_recebidos = conexao.recv(4096).decode()
             dados = json.loads(dados_recebidos)
             sinal_modulado = dados["sinal_modulado"]
-            tipo_modulacao = dados["tipo_modulacao"].lower()
+            enquadramento = dados["metodo_enquadramento"]
+            tipo_modulacao =dados["tipo_modulacao"]
+            deteccao_erro = dados["deteccao_erro"]
 
-            # Demodulação
-            print(f"Demodulando sinal modulado com {tipo_modulacao}...")
-            if tipo_modulacao == "nrz":
-                bits_demodulados = demodular_nrz(sinal_modulado)
-            elif tipo_modulacao == "manchester":
-                bits_demodulados = demodular_manchester(sinal_modulado)
-            elif tipo_modulacao == "bipolar":
-                bits_demodulados = demodular_bipolar(sinal_modulado)
-            else:
-                conexao.sendall(json.dumps({"erro": "Modulação inválida"}).encode())
+            #printar tudo que recebeu
+            print(f"Sinal modulado: {sinal_modulado}")
+            print(f"Enquadramento: {enquadramento}")
+            print(f"Tipo de modulação: {tipo_modulacao}")
+            print(f"Deteccao de erro: {deteccao_erro}")
+
+            # corrigir ou nao os quadros
+            resposta = []
+
+            try:    
+                resposta = arrumar_codigo(sinal_modulado, enquadramento, deteccao_erro)
+            except Exception as e:
+                conexao.sendall(json.dumps({"erro": f"Erro ao arrumar código: {e}"}).encode())
                 continue
-
-            # Correção de erros
-            bits_corrigidos = hamming_decode(''.join(map(str, bits_demodulados)))
-
-            # Conversão para texto
+           
             try:
-                texto_recebido = bits_para_texto(list(map(int, bits_corrigidos)))
+                if len(resposta[1]) > 0:
+                    texto = bits_para_texto(resposta[1])
+                else:
+                    texto = resposta[0]
             except ValueError as e:
                 conexao.sendall(json.dumps({"erro": f"Erro na conversão para texto: {e}"}).encode())
                 continue
 
             # Enviar resposta para o cliente
-            resposta = json.dumps({"texto_recebido": texto_recebido})
+            resposta = json.dumps({"texto_recebido": texto})
             conexao.sendall(resposta.encode())
 
-            print(f"Texto recebido: {texto_recebido}")
+            print(f"Texto recebido: {texto}")
         
         except Exception as e:
             conexao.sendall(json.dumps({"erro": f"Erro inesperado: {str(e)}"}).encode())

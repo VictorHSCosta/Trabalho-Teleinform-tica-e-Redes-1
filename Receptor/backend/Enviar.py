@@ -36,7 +36,7 @@ def enviar_dados(HOST ,texto ,tipo_modulacao,porcentagem_erro, enquadramento, de
         return
     quadroBits = decimal_para_bits(quadro[0])
     print(f"Quadro: {quadro}")
-    print("--------------------")
+    print("#################################################################################")
 
     ##colocamos o codigo de hamming para funcionar
     print("Aplicando codigo de hamming")
@@ -54,7 +54,7 @@ def enviar_dados(HOST ,texto ,tipo_modulacao,porcentagem_erro, enquadramento, de
     desenquadramento = corrigir_erros_quadros(codigo_hamming)
     desenquadramento = desenquadramento_contagem_caracteres(desenquadramento) if enquadramento == "Contagem de bit" else desenquadramento_insercao_bytes(desenquadramento)
     print(f"Mensagem que vai chegar: {desenquadramento}")
-    print("--------------------")
+    print("#################################################################################")
 
 
     #bit de paridade 
@@ -64,7 +64,7 @@ def enviar_dados(HOST ,texto ,tipo_modulacao,porcentagem_erro, enquadramento, de
     erroParidade = adicionar_erro(bitParidade, porcentagem_erro)
     bitParidade = erroParidade[0]
     print(f"Esta correto o bit de paridade: {verificar_paridade(bitParidade)}")
-    print("--------------------")
+    print("#################################################################################")
 
     #crc32
 

@@ -63,7 +63,7 @@ def processar_dados():
         data = request.get_json()
 
         texto = data.get("text", "")
-        tipo_modulacao = data.get("modo", "").lower()
+        tipo_modulacao = data.get("modo", "")
         porcentagem_erro = float(data.get("erro", 0))
         enquadramento = data.get("enquadramento", "")   
         deteccao_erro = data.get("deteccao", "")
@@ -77,7 +77,7 @@ def processar_dados():
             return jsonify({"erro": "O IP do servidor não está definido!"}), 400
         if not tipo_modulacao:
             return jsonify({"erro": "O tipo de modulação não pode ser vazio!"}), 400
-        if porcentagem_erro < 0 or porcentagem_erro > 100:
+        if( porcentagem_erro < 0 or porcentagem_erro > 100):
             return jsonify({"erro": "Porcentagem de erro inválida!"}), 400
 
         # 🛑 Debug: Printando os dados recebidos
@@ -88,15 +88,17 @@ def processar_dados():
         print(f"Enquadramento: {enquadramento}")
         print(f"Detecção de erro: {deteccao_erro}")
         
-        
+        # 🔹 Redireciona a saída do print() para capturar a saída do script
         host = os.getenv("DEFAULT_IP")
 
         # 🔹 Redireciona a saída do print() para capturar a saída do script
         sys.stdout = io.StringIO()
 
         # 🔹 Chama `enviar_dados()` com os parâmetros corretos
+        
+        
         enviar_dados(host, texto, tipo_modulacao, porcentagem_erro, enquadramento, deteccao_erro)
-
+        
         # 🔹 Captura a saída do print()
         resultado = sys.stdout.getvalue()
 
@@ -107,7 +109,7 @@ def processar_dados():
 
     except Exception as e:
         print("🛑 ERRO NO SERVIDOR:", str(e))  # Mostra o erro no terminal
-        return jsonify({"erro": str(e)}), 500
+        return jsonify({"erro no servidor": str(e)}), 500
     
 
 
