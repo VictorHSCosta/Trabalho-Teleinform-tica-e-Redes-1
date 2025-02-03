@@ -1,5 +1,3 @@
-import socket
-import json
 from .deteccao_de_erros import adicionar_paridade, detectar_erros_quadros, verificar_paridade, adicionar_crc32, verificar_crc32
 from .adicionar_erro import adicionar_erro
 from .conversores import bits_para_decimal, texto_para_bits, bits_para_texto ,decimal_para_bits

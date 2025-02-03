@@ -5,8 +5,6 @@ import threading
 import json
 from backend.arrumar_codigo import arrumar_codigo
 
-
-
 app = Flask(__name__)
 
 # Configuração do servidor socket
@@ -16,61 +14,91 @@ PORTA = 12345  # Porta do servidor socket
 texto = ""
 
 def servidor_socket():
-    """Servidor TCP que recebe os dados"""
+    """Servidor TCP que recebe os dados do transmissor"""
     servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    servidor.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Permite reutilizar a porta imediatamente
     servidor.bind((HOST, PORTA))
     servidor.listen(5)
-    print(f"Servidor TCP rodando em {HOST}:{PORTA}")
+    print(f"📡 Servidor TCP rodando em {HOST}:{PORTA}, aguardando conexão...")
 
     while True:
         conexao, endereco = servidor.accept()
-        print(f"Conexão estabelecida com: {endereco}")
-        print("Recebendo dados...")
-        
+        print(f"\n🔹 Conexão estabelecida com: {endereco}")
+        print("📩 Recebendo dados...")
 
         try:
             # Recebe os dados e converte de JSON
-            dados_recebidos = conexao.recv(4096).decode()
+            buffer = []  # Corrigido erro de sintaxe
+            while True:
+                parte = conexao.recv(4096)
+                if not parte:
+                    break
+                buffer.append(parte)
+            dados_recebidos = b''.join(buffer).decode()
+            
+            if not dados_recebidos:
+                print("❌ Nenhum dado recebido.")
+                conexao.close()
+                continue
+
             dados = json.loads(dados_recebidos)
-            sinal_modulado = dados["sinal_modulado"]
-            enquadramento = dados["metodo_enquadramento"]
-            tipo_modulacao =dados["tipo_modulacao"]
-            deteccao_erro = dados["deteccao_erro"]
+            
+            # Extraindo os dados recebidos
+            sinal_modulado = dados.get("sinal_modulado", [])
+            enquadramento = dados.get("metodo_enquadramento", "")
+            tipo_modulacao = dados.get("tipo_modulacao", "")
+            deteccao_erro = dados.get("deteccao_erro", "")
 
-            #printar tudo que recebeu
-            print(f"Sinal modulado: {sinal_modulado}")
-            print(f"Enquadramento: {enquadramento}")
-            print(f"Tipo de modulação: {tipo_modulacao}")
-            print(f"Deteccao de erro: {deteccao_erro}")
+            # Printando os dados recebidos para conferência
+            print(f"🔹 Sinal modulado recebido ({tipo_modulacao}): {sinal_modulado}")
+            print(f"🔹 Método de enquadramento: {enquadramento}")
+            print(f"🔹 Método de detecção de erro: {deteccao_erro}")
 
-            # corrigir ou nao os quadros
-            resposta = []
+            if not sinal_modulado:
+                conexao.sendall(json.dumps({"erro": "Sinal modulado inválido ou vazio."}).encode())
+                conexao.close()
+                continue
 
-            try:    
+            # 🔹 Corrigir ou não os quadros
+            try:
                 resposta = arrumar_codigo(sinal_modulado, enquadramento, deteccao_erro)
             except Exception as e:
-                conexao.sendall(json.dumps({"erro": f"Erro ao arrumar código: {e}"}).encode())
+                erro_msg = f"Erro ao processar código: {e}"
+                print(f"❌ {erro_msg}")
+                conexao.sendall(json.dumps({"erro": erro_msg}).encode())
                 continue
-           
+
+            # 🔹 Converter bits para texto, se possível
             try:
                 if len(resposta[1]) > 0:
                     texto = bits_para_texto(resposta[1])
                 else:
                     texto = resposta[0]
             except ValueError as e:
-                conexao.sendall(json.dumps({"erro": f"Erro na conversão para texto: {e}"}).encode())
+                erro_msg = f"Erro na conversão de bits para texto: {e}"
+                print(f"❌ {erro_msg}")
+                conexao.sendall(json.dumps({"erro": erro_msg}).encode())
                 continue
 
-            # Enviar resposta para o cliente
-            resposta = json.dumps({"texto_recebido": texto})
-            conexao.sendall(resposta.encode())
+            # 🔹 Enviar resposta para o transmissor
+            resposta_json = json.dumps({"texto_recebido": texto})
+            conexao.sendall(resposta_json.encode())
 
-            print(f"Texto recebido: {texto}")
-        
+            print(f"📜 Texto decodificado e enviado: {texto}")
+
+        except json.JSONDecodeError:
+            erro_msg = "❌ Erro ao decodificar JSON recebido."
+            print(erro_msg)
+            conexao.sendall(json.dumps({"erro": erro_msg}).encode())
+
         except Exception as e:
-            conexao.sendall(json.dumps({"erro": f"Erro inesperado: {str(e)}"}).encode())
+            erro_msg = f"❌ Erro inesperado: {str(e)}"
+            print(erro_msg)
+            conexao.sendall(json.dumps({"erro": erro_msg}).encode())
 
-        conexao.close()
+        finally:
+            conexao.close()
+            print("🔻 Conexão encerrada.\n")
 
 # Criar uma thread para rodar o servidor socket em paralelo com Flask
 thread_socket = threading.Thread(target=servidor_socket, daemon=True)
