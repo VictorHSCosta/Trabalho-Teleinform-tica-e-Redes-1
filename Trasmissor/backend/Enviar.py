@@ -11,6 +11,7 @@ from .enquadramento import enquadramento_contagem_caracteres, enquadramento_inse
 def enviar_dados(HOST ,texto ,tipo_modulacao,porcentagem_erro, enquadramento, deteccao_erro):
     # Configuração do cliente socket
   # O usuário pode digitar o IP do servidor Flask
+    HOST = '172.29.45.194'
     PORTA = 12345  # Mesma porta do servidor
 
     # Criar o socket
