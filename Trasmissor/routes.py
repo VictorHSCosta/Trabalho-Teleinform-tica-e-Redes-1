@@ -40,6 +40,7 @@ def verificar_ip():
         sock.connect((ip, 12345))
         sock.close()
         return jsonify({"sucesso": True, "mensagem": "IP válido! Redirecionando..."})
+    
     except socket.error:
         return jsonify({"erro": "Não foi possível conectar ao IP informado."}), 400
     

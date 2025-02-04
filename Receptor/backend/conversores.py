@@ -40,6 +40,18 @@ def bits_para_decimal(bits_array):
     return decimal_array
 
 
+def padronizar_bits(bits_array):
+    # Calcula quantos bits faltam para completar um byte
+    print("Opaaaaaaaaa")
+    print(bits_array)
+
+    resto = len(bits_array) % 8
+    if resto != 0:
+        padding = [0] * (8 - resto)
+        bits_array.extend(padding)
+    return bits_array
+
+
 
 
 

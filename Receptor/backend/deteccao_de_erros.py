@@ -59,6 +59,19 @@ def detectar_erros_quadros(quadros, metodo):
         else:
             print(f"❌ Quadro {i+1}: Erro detectado ({metodo} inválido!)")
 
+def remover_crc32(bits):
+    """
+    Remove os 32 bits finais (CRC-32) de um conjunto de bits e retorna apenas os bits originais.
+    """
+    if len(bits) <= 32:
+        raise ValueError("O conjunto de bits é muito pequeno para conter um CRC-32.")
+
+    # Passo 1: Separar a parte da mensagem e a parte do CRC
+    bits_sem_crc = bits[:-32]  # Remove os últimos 32 bits
+
+    return bits_sem_crc  # Retorna apenas os bits originais sem o CRC
+
+
 
 
 

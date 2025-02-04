@@ -6,7 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Receptor</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="../static/javaScript/scripts.js" defer></script>
+  <!-- Inclua a biblioteca do Socket.IO (a versão deve ser compatível com a do Flask-SocketIO) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
+  <!-- Script para atualizar a página (ver abaixo) -->
+  <script src="static/javaScript/scripts.js" defer></script>
 </head>
 
 <body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 text-white font-sans h-screen flex flex-col">
@@ -14,7 +17,7 @@
   <!-- Cabeçalho -->
   <header class="bg-gray-900 shadow-lg p-4 flex items-center justify-between">
     <button id="home" class="flex items-center space-x-2 hover:opacity-80 transition">
-      <img src="../static/siteImagens/send_to_mobile_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="Logo" class="w-10 h-10">
+      <img src="{{ url_for('static', filename='siteImagens/send_to_mobile_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png') }}" alt="Logo" class="w-10 h-10">
       <span class="text-lg font-semibold">Receptor</span>
     </button>
   </header>
@@ -35,7 +38,7 @@
       <textarea id="receivedBits" class="w-full p-3 border border-gray-600 bg-gray-700 text-white rounded-lg mt-2 focus:ring-2 focus:ring-gray-500 focus:outline-none placeholder-gray-400" rows="2"></textarea>
 
       <h2 class="text-xl font-semibold text-gray-300 mt-4">Método de detecção de erro escolhido</h2>
-      <p class="text-gray-400 bg-gray-700 p-3 rounded-md">Manchester</p>
+      <p id="metodo" class="text-gray-400 bg-gray-700 p-3 rounded-md">Manchester</p>
 
       <h2 class="text-xl font-semibold text-gray-300 mt-4">Houve erros?</h2>
       <p id="error" class="text-gray-400 bg-gray-700 p-3 rounded-md">Não</p>

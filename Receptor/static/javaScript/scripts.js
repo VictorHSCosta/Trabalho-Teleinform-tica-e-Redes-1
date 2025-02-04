@@ -1,23 +1,17 @@
-function verificarIP() {
-  const ip = document.getElementById("ipInput").value;
-  const status = document.getElementById("status");
+document.addEventListener("DOMContentLoaded", () => {
+  // Conecta ao servidor Socket.IO
+  const socket = io();
 
-  fetch("/verificar_ip", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ ip: ip }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.sucesso) {
-        setTimeout(() => {
-          window.location.href = "/home";
-        }, 2000);
-      } else {
-        status.innerHTML = "❌ " + data.erro;
-      }
-    })
-    .catch((error) => {
-      status.innerHTML = "❌ Erro na requisição!";
-    });
-}
+  // Escuta o evento 'atualizacao' emitido pelo servidor
+  socket.on("atualizacao", (dados) => {
+    console.log("Dados recebidos:", dados);
+
+    // Atualiza os elementos da página com os dados recebidos
+    document.getElementById("finalText").value = dados.texto;
+    document.getElementById("receivedBits").value = dados.bits;
+    document.getElementById("error").innerText = dados.correcao;
+    document.getElementById("metodo").innerText = dados.enquadramento;
+    // Caso queira exibir também o tipo de modulação:
+    // document.getElementById('algumElemento').innerText = dados.modulacao;
+  });
+});

@@ -5,11 +5,13 @@
 from .config import run
 
 def get_bits_array(text):
-        """
-        Retorna um array onde cada bit é uma casa do array.
-        """
-        binary_representation = ''.join(format(ord(char), '08b') for char in text)
-        return [int(bit) for bit in binary_representation]
+    """
+    Retorna um array onde cada bit é uma casa do array, ignorando caracteres nulos (\0).
+    """
+    # Filtra caracteres nulos antes de converter para binário
+    filtered_text = text.replace('\0', '')  
+    binary_representation = ''.join(format(ord(char), '08b') for char in filtered_text)
+    return [int(bit) for bit in binary_representation]
 
 def get_seven_bit_chunks(text):
         
