@@ -4,3 +4,7 @@ app/static/images/digital
 app/static/images/analogico
 __pycache__/
 *.pyc
+Transmissor/.env
+venv
+Transmissor/static/images/digital
+Transmissor/static/images/analogico

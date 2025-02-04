@@ -43,7 +43,12 @@ def enviar_dados(ip_servidor):
             "tipo_modulacao": tipo_modulacao
         }
 
-        cliente.sendall(json.dumps(dados).encode())
+        print("📤 Dados enviados ao receptor:", json.dumps(dados, indent=4))
+
+        cliente.send(json.dumps(dados).encode())
+        cliente.shutdown(socket.SHUT_WR)  # Indica que os dados foram enviados completamente
+
+
 
         resposta = cliente.recv(4096).decode()
         resposta_json = json.loads(resposta)
