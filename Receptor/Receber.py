@@ -1,106 +1,135 @@
-from flask import Flask, render_template, request, jsonify
-from backend.conversores import bits_para_texto
 import socket
-import threading
 import json
-from backend.arrumar_codigo import arrumar_codigo
-import os
-from flask_cors import CORS 
-
+import threading
+from flask import Flask, jsonify, render_template
+from flask_cors import CORS
+from backend.deteccao_de_erros import verificar_paridade, verificar_crc32
+from backend.conversores import bits_para_texto
+from backend.hamming import corrigir_erros_quadros
+from backend.demodulador import demodular_sinal 
+from backend.enquadramento import desenquadramento_contagem_caracteres, desenquadramento_insercao_bytes
 
 app = Flask(__name__)
-CORS(app) 
+CORS(app)
 
-# Variável global para armazenar o último dado recebido
+# 🔹 Variável Global para armazenar últimos dados recebidos
 ultimo_dado = {
     "texto": "Nenhum dado recebido ainda",
-    "bits": "Atualizando...",
-    "correcao": "Atualizando...",
-    "enquadramento": "Atualizando...",
-    "modulacao": "Atualizando..."
+    "bits": "Aguardando...",
+    "correcao": "Aguardando...",
+    "enquadramento": "Aguardando...",
+    "modulacao": "Aguardando..."
 }
 
-# Configuração do servidor socket
-HOST = '0.0.0.0'  # Permite conexões de qualquer computador na rede
-PORTA = 12345     # Porta do servidor socket
+# 🔹 Configuração do Servidor TCP
+HOST = "0.0.0.0"
+PORTA = 12345
+
+def processar_mensagem(dados):
+    """
+    Processa a mensagem recebida do transmissor, incluindo:
+     Demodulação
+     Desenquadramento
+     Verificação e correção de erros
+     Conversão final para texto
+    """
+
+    try:
+        print(f"🔍 Dados recebidos: {dados}")
+
+        # 🔹 Extraindo informações do JSON
+        sinais_modulados = dados["sinal_modulado"]
+        enquadramento = dados["metodo_enquadramento"]
+        tipo_modulacao = dados["tipo_modulacao"]
+        deteccao_erro = dados["deteccao_erro"]
+
+        print(f"🔹 Modulação usada: {tipo_modulacao}")
+        print(f"🔹 Método de enquadramento: {enquadramento}")
+        print(f"🔹 Método de detecção de erro: {deteccao_erro}")
+
+        # 🔹 1️⃣ Demodulação (Agora chamando corretamente `demodular_sinal`)
+        print("📡 Demodulando sinal...")
+        quadros_demodulados = demodular_sinal(sinais_modulados, tipo_modulacao)
+        print(f"🔍 Quadros demodulados: {quadros_demodulados}")
+
+        # 🔹 2️⃣ Desenquadramento (logo após a demodulação)
+        print("📡 Desenquadrando quadros...")
+        if enquadramento == "Contagem de Caracteres":
+            quadros_desenquadrados = desenquadramento_contagem_caracteres(quadros_demodulados)
+        elif enquadramento == "Inserção de Bytes":
+            quadros_desenquadrados = desenquadramento_insercao_bytes(quadros_demodulados)
+        else:
+            return "❌ Erro: Método de enquadramento desconhecido."
+
+        print(f"📡 Bits após desenquadramento: {quadros_desenquadrados}")
+
+        # 🔹 3️⃣ Verificação de Erros (Bit de Paridade ou CRC)
+        erro_detectado = False
+        if deteccao_erro == "Bit de Paridade":
+            erro_detectado = not verificar_paridade(quadros_desenquadrados)
+        elif deteccao_erro == "CRC":
+            erro_detectado = not verificar_crc32(quadros_desenquadrados)
+
+        print(f"⚠ Erro detectado? {erro_detectado}")
+
+        # 🔹 4️⃣ Correção de Erros com Hamming (após detecção)
+        print("🔍 Tentando corrigir erros usando Hamming...")
+        quadros_corrigidos = corrigir_erros_quadros(quadros_desenquadrados)
+        print(f"✅ Quadros corrigidos: {quadros_corrigidos}")
+
+        # 🔹 5️⃣ Conversão de Bits para Texto
+        mensagem_final = bits_para_texto(quadros_corrigidos)
+        print(f"✅ Mensagem decodificada: {mensagem_final}")
+
+        return mensagem_final
+
+    except Exception as e:
+        print(f"❌ Erro ao processar mensagem: {e}")
+        return f"Erro ao processar mensagem: {e}"
+
 
 def servidor_socket():
-    """Servidor TCP que recebe os dados"""
+    """Servidor TCP que recebe os dados."""
     servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # Habilita a reutilização de endereço (opcional, mas pode ajudar)
     servidor.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     servidor.bind((HOST, PORTA))
     servidor.listen(5)
-    print(f"Servidor TCP rodando em {HOST}:{PORTA}")
+    print(f"📡 Servidor TCP rodando em {HOST}:{PORTA}")
 
     while True:
         conexao, endereco = servidor.accept()
-        print(f"Conexão estabelecida com: {endereco}")
-        print("Recebendo dados...")
+        print(f"🔹 Conexão estabelecida com: {endereco}")
 
         try:
-            # Recebe os dados e converte de JSON
             dados_recebidos = conexao.recv(4096).decode()
+            print(f"🔍 String recebida (antes de processar JSON): '{dados_recebidos}'")
+            if not dados_recebidos:
+                print("❌ Nenhum dado recebido!")
+                continue
+
             dados = json.loads(dados_recebidos)
-            sinal_modulado = dados["sinal_modulado"]
-            enquadramento = dados["metodo_enquadramento"]
-            tipo_modulacao = dados["tipo_modulacao"]
-            deteccao_erro = dados["deteccao_erro"]
+            mensagem_decodificada = processar_mensagem(dados)
 
-            # Exibe os dados recebidos
-            print(f"Sinal modulado: {sinal_modulado}")
-            print(f"Enquadramento: {enquadramento}")
-            print(f"Tipo de modulação: {tipo_modulacao}")
-            print(f"Detecção de erro: {deteccao_erro}")
-
-            # Corrigir ou não os quadros
-            try:    
-                resposta = arrumar_codigo(sinal_modulado, enquadramento, deteccao_erro)
-            except Exception as e:
-                conexao.sendall(json.dumps({"erro": f"Erro ao arrumar código: {e}"}).encode())
-                continue
-
-            # Prepara os dados para enviar de volta ao cliente
-            dados_enviar = {
-                "texto": resposta[0],
-                "bits": resposta[1],
-                "correcao": deteccao_erro,
-                "enquadramento": enquadramento,
-                "modulacao": tipo_modulacao
-            }
-
-             # Emite o evento 'atualizacao' para todos os clientes conectados
-             # Emite o evento 'atualizacao' para todos os clientes conectados
-            
+            # 🔹 Armazenar dados recebidos
             global ultimo_dado
-            ultimo_dado = dados_enviar
+            ultimo_dado.update({
+                "texto": mensagem_decodificada,
+                "bits": dados["sinal_modulado"],
+                "correcao": dados["deteccao_erro"],
+                "enquadramento": dados["metodo_enquadramento"],
+                "modulacao": dados["tipo_modulacao"]
+            })
 
-            ultimo_dado["texto"] = resposta[0]
-            ultimo_dado["bits"] = resposta[1]
-            ultimo_dado["correcao"] = deteccao_erro
-            ultimo_dado["enquadramento"] = enquadramento
-            ultimo_dado["modulacao"] = tipo_modulacao
-
-           
-            try:
-                if len(resposta[1]) > 0:
-                    texto = bits_para_texto(resposta[1])
-                else:
-                    texto = resposta[0]
-            except ValueError as e:
-                conexao.sendall(json.dumps({"erro": f"Erro na conversão para texto: {e}"}).encode())
-                continue
-
-            # Envia a resposta para o cliente
-            resposta_json = json.dumps({"texto_recebido": texto})
+            resposta_json = json.dumps({"texto_recebido": mensagem_decodificada})
             conexao.sendall(resposta_json.encode())
 
-            print(f"Texto recebido: {texto}")
-        
         except Exception as e:
-            conexao.sendall(json.dumps({"erro": f"Erro inesperado: {str(e)}"}).encode())
+            print(f"❌ Erro ao processar dados: {e}")
+            conexao.sendall(json.dumps({"erro": str(e)}).encode())
 
-        conexao.close()
+        finally:
+            conexao.close()
+
 
 @app.route('/')
 def index():
@@ -108,14 +137,8 @@ def index():
 
 @app.route('/dados')
 def obter_dados():
-    """Retorna os últimos dados recebidos em JSON"""
-    global ultimo_dado
     return jsonify(ultimo_dado)
 
 if __name__ == '__main__':
-    # Verifica se está no processo filho do reloader
-    if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-        thread_socket = threading.Thread(target=servidor_socket, daemon=True)
-        thread_socket.start()
-
+    threading.Thread(target=servidor_socket, daemon=True).start()
     app.run(debug=True, host='0.0.0.0', port=3000)

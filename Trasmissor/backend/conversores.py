@@ -45,7 +45,7 @@ def bits_para_decimal(bits_array):
 
 if __name__ == "__main__":
     # Teste de conversão de texto para bits
-    texto = "Olá, Mundo! 😊"
+    texto = "Olá, Mundo "
     bits = texto_para_bits(texto)
     print(f"Texto: {texto}")
     print(f"Bits: {bits}")

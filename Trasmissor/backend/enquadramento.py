@@ -43,7 +43,7 @@ def enquadramento_insercao_bytes(mensagem: str) -> list:
     return blocos
 
 #Vou colocar a parte de desenquadrar aqui junto, mas da pra separar os dois, porque uma parte é so no transmissor 
-#e outra apenas no receptor.
+#e a outra apenas no receptor.
 
 def desenquadramento_contagem_caracteres(quadros):
     """Desenquadra os quadros usando contagem de caracteres."""
