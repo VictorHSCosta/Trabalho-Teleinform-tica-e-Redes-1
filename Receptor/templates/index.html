@@ -6,10 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Receptor</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Inclua a biblioteca do Socket.IO (a versão deve ser compatível com a do Flask-SocketIO) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
-  <!-- Script para atualizar a página (ver abaixo) -->
-  <script src="static/javaScript/scripts.js" defer></script>
+  <!-- Inclui o JavaScript para atualizar automaticamente os dados -->
+  <script src="/static/javaScript/scripts.js" defer></script>
 </head>
 
 <body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 text-white font-sans h-screen flex flex-col">
@@ -28,26 +26,29 @@
 
     <div class="bg-gray-800 p-6 rounded-xl shadow-md w-full max-w-md">
       <label for="input" class="text-gray-400 block mb-2">Bits a receber:</label>
-      <input type="text" id="input" placeholder="Digite os bits recebidos" class="w-full p-3 border border-gray-600 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-gray-500 focus:outline-none placeholder-gray-400">
+      <textarea type="text" id="receivedBits" placeholder="Digite os bits recebidos" class="w-full p-3 border border-gray-600 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-gray-500 focus:outline-none placeholder-gray-400">
+      </textarea>
 
       <h2 class="text-xl font-semibold text-gray-300 mt-4">Tipo de onda enviada</h2>
-      <img src="" alt="Onda" class="w-full mt-2 rounded-lg shadow-md">
+      <img id="imagemtexto" src="static/imagens/digital/Sinal NRZ.png" alt="Sinal NRZ" onclick="expandirImagem()" style="cursor: pointer; max-width: auto;">
 
-      <h2 class="text-xl font-semibold text-gray-300 mt-4">Bits recebidos</h2>
-      <p id="output" class="text-gray-400 bg-gray-700 p-3 rounded-md">...</p>
-      <textarea id="receivedBits" class="w-full p-3 border border-gray-600 bg-gray-700 text-white rounded-lg mt-2 focus:ring-2 focus:ring-gray-500 focus:outline-none placeholder-gray-400" rows="2"></textarea>
+      <!-- Modal para exibir a imagem em tela cheia -->
+      <div id="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.8); align-items: center; justify-content: center; z-index: 1000;">
+        <img id="modalImg" style="max-width: 90vw; max-height: 90vh; border-radius: 10px;">
+        <span onclick="fecharModal()" style="position: absolute; top: 20px; right: 30px; color: white; font-size: 30px; cursor: pointer;">&times;</span>
+      </div>
+
+      <h2 class="text-xl font-semibold text-gray-300 mt-4">Tipo de modulação</h2>
+      <p id="receivedModulacao" class="text-gray-400 bg-gray-700 p-3 rounded-md">Aguardando...</p>
+
+      <h2 class="text-xl font-semibold text-gray-300 mt-4">Metodo de enquadramento</h2>
+      <p id="metodo" class="text-gray-400 bg-gray-700 p-3 rounded-md">Aguardando...</p>
 
       <h2 class="text-xl font-semibold text-gray-300 mt-4">Método de detecção de erro escolhido</h2>
-      <p id="metodo" class="text-gray-400 bg-gray-700 p-3 rounded-md">Manchester</p>
-
-      <h2 class="text-xl font-semibold text-gray-300 mt-4">Houve erros?</h2>
-      <p id="error" class="text-gray-400 bg-gray-700 p-3 rounded-md">Não</p>
-
-      <h2 class="text-xl font-semibold text-gray-300 mt-4">Bits corrigidos</h2>
-      <p id="corrigido" class="text-gray-400 bg-gray-700 p-3 rounded-md">001</p>
+      <p id="error" class="text-gray-400 bg-gray-700 p-3 rounded-md">Aguardando...</p>
 
       <h2 class="text-xl font-semibold text-gray-300 mt-4">Texto Final</h2>
-      <textarea id="finalText" class="w-full p-3 border border-gray-600 bg-gray-700 text-white rounded-lg mt-2 focus:ring-2 focus:ring-gray-500 focus:outline-none placeholder-gray-400" rows="3"></textarea>
+      <textarea id="finalText" class="w-full p-3 border border-gray-600 bg-gray-700 text-white rounded-lg mt-2 focus:ring-2 focus:ring-gray-500 focus:outline-none placeholder-gray-400" rows="3" placeholder="Aguardando dados..."></textarea>
     </div>
   </main>
 
